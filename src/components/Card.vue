@@ -101,7 +101,6 @@ export default {
           flex-direction: column;
 
           .card-button {
-            font-size: 2.2em;
             // font-weight: 700;
             margin-bottom: 0.5em;
             padding-left: 0.6em;

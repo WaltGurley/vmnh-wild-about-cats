@@ -6,7 +6,10 @@
         v-bind:key="i"
         v-bind:cardData="image"
       ></Card>
-      <StarterCard></StarterCard>
+      <StarterCard
+        v-show="preGame"
+        v-on:startGame="startGame"
+      ></StarterCard>
     </div>
   </div>
 </template>
@@ -32,7 +35,11 @@ export default {
   data () {
     return {
       imageData: [],
-      uniqueAnimalNames: []
+      uniqueAnimalNames: [],
+      preGame: true,
+      startRound: false,
+      endRound: false,
+      endGame: false
     }
   },
   methods: {
@@ -74,6 +81,11 @@ export default {
         
       })
     },
+    startGame: function () {
+      // This function changes the state of the game to start a round
+      preGame = false
+      startRound = true
+    },
     resetOnInactivity: function () {
       // This function reloads the page after two minutes of inactivity.
       clearTimeout(this.startInactiveResetTimer)
@@ -101,6 +113,7 @@ $card-container-height: 90vh;
 
   button {
     cursor: pointer;
+    font-size: 2.2em;
     color: #FFFFFF;
     background-color: #333537;
     border-radius: 3em;
@@ -114,7 +127,7 @@ $card-container-height: 90vh;
   .card-container {
     width: 100vw;
     height: $card-container-height;
-    perspective: 8000px;
+    perspective: 15000px;
   }
 }
 </style>
