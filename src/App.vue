@@ -2,21 +2,29 @@
   <div id="app" v-on:click="resetOnInactivity">
     <div class="card-container">
       <Card 
-        v-for="(image, i) in imageData"
-        v-bind:key="i"
+        v-for="image in imageData"
+        v-bind:key="image.id"
         v-bind:cardData="image"
+        v-bind:currentCardID="currentCard"
+        v-on:nextCard="getNextGameCard"
+        v-on:score="trackScore"
       ></Card>
-      <StarterCard
-        v-show="preGame"
+      <StartCard
         v-on:startGame="startGame"
-      ></StarterCard>
+        v-bind:showStartCard="preGame"
+      ></StartCard>
+      <EndCard
+        v-bind:userData="imageData"
+        v-bind:showEndCard="endRound"
+      ></EndCard>
     </div>
   </div>
 </template>
 
 <script>
 import Card from './components/Card.vue'
-import StarterCard from './components/StarterCard.vue'
+import StartCard from './components/StartCard.vue'
+import EndCard from './components/EndCard.vue'
 
 import shuffle from 'lodash/shuffle'
 import sampleSize from 'lodash/sampleSize'
@@ -25,12 +33,12 @@ import uniq from 'lodash/uniq'
 
 import fullImgData from './assets/imageData.csv'
 
-
 export default {
   name: 'app',
   components: {
     Card,
-    StarterCard
+    StartCard,
+    EndCard
   },
   data () {
     return {
@@ -39,7 +47,8 @@ export default {
       preGame: true,
       startRound: false,
       endRound: false,
-      endGame: false
+      cardsPerRound: 5,
+      currentCard: 0
     }
   },
   methods: {
@@ -55,16 +64,17 @@ export default {
       this.setDataForRound()
     },
     setDataForRound: function () {
-      // This function sets the data for the 'numberOfCards' to be used in one round of play.
-      const numberOfCards = 5
+      // This function sets the data for the 'cardsPerRound' to be used in one round of play.
       this.imageData = sampleSize(
         filter(fullImgData, img => !img.identified),
-        numberOfCards
+        this.cardsPerRound
       )
 
       const numberOfChoices = 3
       const uniqueNames = this.uniqueAnimalNames
-      this.imageData.forEach(function (data) {
+      this.imageData.forEach(function (data, i) {
+        // Set unique id for reference later
+        data.id = i + 1
         // Shuffle image animal name and selection of two other unique animal names to create choices
         data.choices = shuffle(
           [
@@ -77,19 +87,36 @@ export default {
             data.animalName
           ]
         )
-        console.log(data.choices);
-        
       })
     },
     startGame: function () {
       // This function changes the state of the game to start a round
-      preGame = false
-      startRound = true
+      this.preGame = false
+      this.startRound = true
+      this.getNextGameCard()
+    },
+    getNextGameCard: function () {
+      // This function provides the iteration over the cards in a round and handles when the last card in a round is completed
+      if (this.currentCard === this.cardsPerRound) {
+        this.finishRound()
+        this.currentCard = 0
+        return
+      }
+      this.currentCard++
+    },
+    trackScore: function (correct) {
+      // This function keeps track of the score for the user
+      this.imageData[this.currentCard - 1].identified = correct
+    },
+    finishRound: function () {
+      // This function changes the state of the game to the end of a round in which the score is shown
+      this.startRound = false
+      this.endRound = true
     },
     resetOnInactivity: function () {
       // This function reloads the page after two minutes of inactivity.
       clearTimeout(this.startInactiveResetTimer)
-      this.startInactiveResetTimer = setTimeout(() => window.location.reload(), 120000)
+      this.startInactiveResetTimer = setTimeout( () => window.location.reload(), 120000)
     }
   },
   beforeMount () {
@@ -108,26 +135,30 @@ $card-container-height: 90vh;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   background-image: url('./assets/RedTile.png');
+  background-position: center;
   color: #333537;
   background-color: #333537;
+  overflow: hidden;
 
   button {
     cursor: pointer;
     font-size: 2.2em;
     color: #FFFFFF;
     background-color: #333537;
-    border-radius: 3em;
+    border-radius: 1.1rem;
     transition: background-color 0.2s ease-in;
 
-    &:hover {
+    &:hover, &:focus {
       background-color: #DD5F5B;
+      outline: none !important;
+      box-shadow: none;
     }
   }
 
   .card-container {
     width: 100vw;
     height: $card-container-height;
-    perspective: 15000px;
+    perspective: 10000px;
   }
 }
 </style>
