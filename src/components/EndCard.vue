@@ -3,17 +3,17 @@
     v-bind:class="[slideType]"
   >
     <div class="card-side front">
-      <div class="text-group">
         <h1 class="card-header">{{ endtext[correctAnswers].greet }}</h1>
+        <div class="panda-icon-holder">
+          <PandaIcon class="panda-icon"/>
+        </div>
+      <div class="text-group">
         <p class="card-subheader">
           You got {{ correctAnswers }} out of {{ totalAnswers }} correct.
         </p>
         <p class="card-paragraph">
           {{ endtext[correctAnswers].say }}
         </p>
-      </div>
-      <div class="panda-icon-holder">
-        <PandaIcon class="panda-icon"/>
       </div>
       <button
         class="card-button"
@@ -86,13 +86,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  $card-width: 28vw;
-  $card-container-height: 90vh;
+  $card-height: 85vh;
+  $card-width: 5 / 8 * $card-height;
   $card-offset-x: -50%;
   $card-offset-y: -50%;
   .card {
     width: $card-width;
-    height: 8/5 * $card-width;
+    height: $card-height;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -122,6 +122,15 @@ export default {
         margin-bottom: 0;
       }
 
+      .panda-icon-holder {
+        display: flex;
+        justify-content: center;
+        
+        .panda-icon {
+          width: 100%;
+          height: 100%;
+        }
+      }
       .card-subheader {
         font-size: 2.2em;
         font-weight: 700;
@@ -161,7 +170,7 @@ export default {
 
     &.slide-in-out-from-bottom-right {
       transform-origin: left;
-      transform: rotateZ(90deg) translateY($card-offset-y);
+      transform: rotateZ(90deg) translateY($card-offset-y) translateX(7.5vh);
     }
   }
 </style>

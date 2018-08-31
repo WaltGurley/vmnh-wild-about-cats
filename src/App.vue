@@ -18,6 +18,12 @@
         v-bind:showEndCard="endRound"
       ></EndCard>
     </div>
+    <div class="next-card-button">
+        <h2 class="button-text">Start</h2>
+        <svg viewBox="-10 -10 137.07 183.1">
+          <path d="M11.79,1.18,115.5,71.64c6,4.08,6,15.73,0,19.81L11.79,161.91C6.37,165.59,0,160.24,0,152V11.09C0,2.86,6.37-2.5,11.79,1.18Z" fill="#333537"/>
+        </svg>
+    </div>
   </div>
 </template>
 
@@ -128,7 +134,6 @@ export default {
 
 <style lang="scss">
 @import './src/assets/css/fonts.scss';
-$card-container-height: 90vh;
 #app {
   font-family: 'Heebo', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -143,13 +148,16 @@ $card-container-height: 90vh;
   button {
     cursor: pointer;
     font-size: 2.2em;
+    font-weight: 400;
     color: #FFFFFF;
     background-color: #333537;
     border-radius: 1.1rem;
-    transition: background-color 0.2s ease-in;
+    border-color: #333537;
+    transition: all 0.2s ease-in;
 
     &:hover, &:focus {
       background-color: #DD5F5B;
+      border-color: #DD5F5B;
       outline: none !important;
       box-shadow: none;
     }
@@ -157,8 +165,42 @@ $card-container-height: 90vh;
 
   .card-container {
     width: 100vw;
-    height: $card-container-height;
+    height: 100%;
     perspective: 10000px;
+  }
+
+  $card-height: 85vh;
+  $card-width: 5 / 8 * $card-height;
+  $center-bw-card-0vw: calc((50vw - #{$card-width} / 2) / 2);
+  .next-card-button {
+    position: fixed;
+    top: 50vh;
+    right: $center-bw-card-0vw;
+    transform: translateX(50%) translateY(-50%);
+
+    height: 7.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .button-text {
+      font-size: 3.2em;
+      font-weight: 400;
+      color: #FFFFFF;
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-right: 0.6rem;
+    }
+
+    svg {
+      height: 90%;
+      width: auto;
+
+      path {
+        stroke: #FFFFFF;
+        stroke-width: 0.6rem;
+      }
+    }
   }
 }
 </style>

@@ -3,17 +3,18 @@
     v-bind:class="[{ flipped: isFlipped }, slideType]"
   >
     <div class="card-side front">
-      <div class="text-group">
         <h1 class="card-header">Under the Umbrella</h1>
+        <div class="panda-icon-holder">
+          <PandaIcon class="panda-icon"/>
+        </div>
+
+      <div class="text-group">
         <p class="card-subheader">
           How well do you know the animals in the mountains of China?
         </p>
         <p class="card-paragraph">
-          Test your ability to identify other animals that share the giant panda habitat.
+          Test your ability to identify some of the animals that share a habitat with the giant panda.
         </p>
-      </div>
-      <div class="panda-icon-holder">
-        <PandaIcon class="panda-icon"/>
       </div>
       <button
         v-on:click="flip"
@@ -30,6 +31,9 @@
         </p>
         <p class="card-paragraph">
           Select the correct name of the animal in the photo from the three choices.
+        </p>
+        <p class="card-paragraph">
+          A panda will keep track of your score.
         </p>
         <p class="card-paragraph">
           Don't worry if you choose incorrectly: You can try again. The game randomly selects from dozens of images, so you'll get to learn something new each time!
@@ -80,9 +84,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  $card-width: 28vw;
-  $card-height: 8/5 * $card-width;
-  $card-container-height: 90vh;
+  $card-height: 85vh;
+  $card-width: 5 / 8 * $card-height;
   $card-offset-x: -50%;
   $card-offset-y: -50%;
   .card {
@@ -117,15 +120,26 @@ export default {
         margin-bottom: 0;
       }
 
+      .panda-icon-holder {
+        display: flex;
+        justify-content: center;
+        
+        .panda-icon {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
       .card-subheader {
-        font-size: 1.8rem;
+        font-size: 1.9rem;
         font-weight: 400;
         padding-left: 3rem;
         padding-right: 3rem;
+        margin-top: 0;
       }
 
       .card-paragraph {
-        font-size: 1.8rem;
+        font-size: 1.9rem;
         font-weight: 400;
         padding-left: 3rem;
         padding-right: 3rem;
@@ -162,7 +176,7 @@ export default {
 
     &.slide-in-out-from-bottom-left {
     transform-origin: left;
-      transform: rotateX(180deg) rotateZ(-90deg) translateX(0) translateY($card-offset-y);
+      transform: rotateX(180deg) rotateZ(-90deg) translateX(7.5vh) translateY($card-offset-y);
     }
   }
 
@@ -182,10 +196,6 @@ export default {
 </style>
 
 <style lang="scss">
-  .panda-icon-holder {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 1rem;
 
     @keyframes rollhead {
       0% {
@@ -247,10 +257,6 @@ export default {
       }
     }
 
-    .panda-icon {
-      width: 75%;
-      height: 75%;
-
       .head {
         transform-origin: center;
         animation-duration: 5s;
@@ -283,6 +289,4 @@ export default {
         animation-iteration-count: infinite;
         animation-timing-function: ease-in;
       }
-    }
-  }
 </style>
