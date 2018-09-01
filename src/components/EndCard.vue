@@ -3,39 +3,37 @@
     v-bind:class="[slideType]"
   >
     <div class="card-side front">
-        <h1 class="card-header">{{ endtext[correctAnswers].greet }}</h1>
         <div class="panda-icon-holder">
           <PandaIcon class="panda-icon"/>
         </div>
       <div class="text-group">
-        <p class="card-subheader">
-          You got {{ correctAnswers }} out of {{ totalAnswers }} correct.
-        </p>
-        <p class="card-paragraph">
+        <h1 class="card-header">{{ endtext[correctAnswers].greet }}</h1>
+        <p class="card-subheader bolded">
           {{ endtext[correctAnswers].say }}
         </p>
+        <p class="card-subheader">
+          You got <span class="bolded">{{ correctAnswers }}</span> out of <span class="bolded">{{ totalNumberCards }}</span> correct.
+        </p>
       </div>
-      <button
-        class="card-button"
-      >
-        Next
-      </button>
+      <p class="card-subheader bottom bolded">
+        Press Play Again to start another round
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 import PandaIcon from '../assets/panda.svg'
+
 export default {
   name: 'EndCard',
   components: {
     PandaIcon
   },
-  props: ['userData', 'showEndCard'],
+  props: ['userData', 'totalNumberCards', 'showEndCard'],
   data () {
     return {
       isFlipped: false,
-      totalAnswers: this.userData.length,
       endtext: [
         {
           greet: 'Whoops',
@@ -47,11 +45,11 @@ export default {
         },
         {
           greet: 'Good job!',
-          say: 'These animals are tricky to identify.'
+          say: 'Some of these animals are tricky to identify'
         },
         {
           greet: 'Not bad!',
-          say: 'These are unusual animals.'
+          say: 'These are unusual animals'
         },
         {
           greet: 'Well done!',
@@ -117,14 +115,15 @@ export default {
 
       .card-header {
         font-size: 3.2rem;
-        margin-top: 2.4rem;
         text-align: center;
         margin-bottom: 0;
+        margin-top: 0;
       }
 
       .panda-icon-holder {
         display: flex;
         justify-content: center;
+        margin-top: 2.4rem;
         
         .panda-icon {
           width: 100%;
@@ -133,20 +132,23 @@ export default {
       }
       .card-subheader {
         font-size: 2.2em;
-        font-weight: 700;
-        // font-style: italic;
         text-align: center;
         padding-left: 3rem;
         padding-right: 3rem;
+        margin-top: 1rem;
+        margin-bottom: 0;
+
+        &.bottom {
+          margin-bottom: 2.4rem;
+        }
       }
 
       .card-paragraph {
         font-size: 2.2em;
         font-weight: 400;
+        text-align: center;
         padding-left: 3rem;
         padding-right: 3rem;
-        margin-top: 1rem;
-        margin-bottom: 0;
       }
 
       .card-button {
