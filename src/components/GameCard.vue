@@ -6,7 +6,7 @@
   >
     <div
       class="card flippable"
-      v-show="this.cardData.id === this.currentCardID"
+      v-show="cardData.id === currentCardID"
       v-bind:class="{ flipped: isFlipped }"
     >
       <div class="card-side front">
@@ -17,8 +17,8 @@
           data-action="zoom"
         >
         <aside class="image-zoom-callout">
+          <p class="image-zoom-text">Touch to zoom</p>
           <TouchIcon/>
-          <p class="image-zoom-text">Touch<br>to zoom</p>
         </aside>
         <div class="card-choices">
           <h2 class="card-header question">Can you identify this animal?</h2>
@@ -42,8 +42,8 @@
           data-action="zoom"
         >
         <aside class="image-zoom-callout">
+          <p class="image-zoom-text">Touch to zoom</p>
           <TouchIcon/>
-          <p class="image-zoom-text">Touch<br>to zoom</p>
         </aside>
         <div v-show="correct">
           <h2 class="card-header">You are correct!</h2>
@@ -62,38 +62,14 @@
 </template>
 
 <script>
-import TouchIcon from '../assets/touchIcon.svg'
-// import Zooming for image zoom
-import Zooming from 'zooming'
-
-const zooming = new Zooming({
-  bgOpacity: 0,
-  // Add border radius to bottom of image when zoomed
-  onBeforeOpen: () => {
-    document.querySelectorAll('.img-zoomable').forEach(img =>
-      img.classList.add('full-border-radius')
-    )
-    document.querySelectorAll('#new-card-button').forEach(d =>
-      d.setAttribute('disabled', true)
-    )
-  },
-  // Remove border radius from bottom of image when back to card
-  onClose: () => {
-    document.querySelectorAll('.img-zoomable').forEach(img =>
-      img.classList.remove('full-border-radius')
-    )
-    document.querySelectorAll('#new-card-button').forEach(d =>
-      d.removeAttribute('disabled')
-    )
-  }
-})
+import TouchIcon from '../assets/touchIcon2.svg'
 
 export default {
-  name: 'Card',
+  name: 'GameCard',
   components: {
     TouchIcon
   },
-  props: ['cardData', 'currentCardID'],
+  props: ['cardData', 'currentCardID', 'zooming'],
   data () {
     return {
       isFlipped: false,
@@ -110,14 +86,8 @@ export default {
         this.correct = false
         this.leftOrRightSlide = 'slide-right'
       }
-      this.$emit('score', this.correct)
+      this.$emit('score', this.correct, choice)
       this.isFlipped = true
-      console.log(this.leftOrRightSlide)
-    },
-    getNextGameCard: function () {
-      // This function sends a signal to the App component to set the currentCardID to the next card 'currentCard++'
-      this.$emit('nextCard')
-      this.leftOrRightSlide = 'slide-right'
     },
     onCardLeave: function () {
       // Must remove the flipped transform for leave transition to work
@@ -127,8 +97,8 @@ export default {
       this.leftOrRightSlide = 'slide-right'
     }
   },
-  mounted: function () {
-    zooming.listen('.img-zoomable')
+  mounted () {
+    this.zooming.listen('.img-zoomable')
   }
 }
 </script>
@@ -141,7 +111,6 @@ $card-offset-y: -50%;
 .card {
   width: $card-width;
   height: 8/5 * $card-width;
-  z-index: 2;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -166,21 +135,20 @@ $card-offset-y: -50%;
     .image-zoom-callout {
       position: absolute;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       pointer-events: none;
       height: 6%;
-      top: 2%;
-      left: 2%;
+      top: 0.5%;
+      right: 2.5%;
       // transform: translateX(50%);
       color: #FFFFFF;
 
       svg {
-        height: 100%;
+        height: 75%;
       }
 
       .image-zoom-text {
         font-size: 1.4rem;
-        margin-left: 0.3em;
         line-height: 1.1em;
         filter: drop-shadow(2px 2px 2px #000000);
       }
@@ -192,7 +160,6 @@ $card-offset-y: -50%;
       position: relative;
 
       &.full-border-radius {
-        z-index: 666;
         border-bottom-right-radius:  1.1rem;
         border-bottom-left-radius:  1.1rem;
         border-top-right-radius: 1.1rem;

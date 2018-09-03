@@ -1,59 +1,64 @@
 <template>
   <div id="app" v-on:click="resetOnInactivity">
-    <transition
-      name="slide"
-    >
-      <div
-        class="score-icon-holder"
-        v-show="scoreIsVisible"
-      >
-        <PandaIcon class="panda-icon"/>
-      </div>
-    </transition>
-
     <div class="card-container">
-      <Card 
+      <transition
+        name="slide"
+      >
+        <div
+          class="score-icon-holder"
+          v-show="scoreIsVisible"
+        >
+          <PandaIcon class="panda-icon"/>
+        </div>
+      </transition>
+      <StartCard
+        v-on:readyStartGame="readyStartGame"
+        v-bind:showStartCard="preGame"
+      />
+      <GameCard 
         v-for="image in imageData"
         v-bind:key="image.id"
         v-bind:cardData="image"
         v-bind:currentCardID="currentCard"
         v-on:nextCard="getNextGameCard"
         v-on:score="trackScore"
-      ></Card>
-
-      <StartCard
-        v-on:readyStartGame="readyStartGame"
-        v-bind:showStartCard="preGame"
-      ></StartCard>
-
+        v-bind:zooming="zooming"
+      />
+      <ReferenceImage
+        v-for="image in referenceCardData"
+        v-bind:key="image.animalName"
+        v-bind:referenceAnimal="showReferenceImageWithID"
+        v-bind:cardData="image"
+        v-bind:zooming="zooming"
+      />
       <EndCard
         v-bind:userData="imageData"
         v-bind:totalNumberCards="cardsPerRound"
         v-bind:showEndCard="endRound"
-      ></EndCard>
+      />
+      <transition
+        name="slide-fade"
+        v-on:after-leave="changeNextButtonText"
+      >
+        <div
+          v-on:click="actionBasedOnGameState"
+          class="next-card-button"
+          v-show="nextButtonIsVisible"
+          >
+            <h2 class="button-text">{{ nextButtonText }}</h2>
+            <svg viewBox="-10 -10 137.07 183.1">
+              <path d="M11.79,1.18,115.5,71.64c6,4.08,6,15.73,0,19.81L11.79,161.91C6.37,165.59,0,160.24,0,152V11.09C0,2.86,6.37-2.5,11.79,1.18Z" fill="#333537"/>
+            </svg>
+        </div>
+      </transition>
     </div>
-
-    <transition
-      name="slide-fade"
-      v-on:after-leave="changeNextButtonText"
-    >
-      <div
-        v-on:click="actionBasedOnGameState"
-        class="next-card-button"
-        v-show="nextButtonIsVisible"
-        >
-          <h2 class="button-text">{{ nextButtonText }}</h2>
-          <svg viewBox="-10 -10 137.07 183.1">
-            <path d="M11.79,1.18,115.5,71.64c6,4.08,6,15.73,0,19.81L11.79,161.91C6.37,165.59,0,160.24,0,152V11.09C0,2.86,6.37-2.5,11.79,1.18Z" fill="#333537"/>
-          </svg>
-      </div>
-    </transition>
   </div>
 </template>
 
 <script>
-import Card from './components/Card.vue'
+import GameCard from './components/GameCard.vue'
 import StartCard from './components/StartCard.vue'
+import ReferenceImage from './components/ReferenceImage.vue'
 import EndCard from './components/EndCard.vue'
 import PandaIcon from './assets/panda.svg'
 
@@ -61,29 +66,38 @@ import shuffle from 'lodash/shuffle'
 import sampleSize from 'lodash/sampleSize'
 import filter from 'lodash/filter'
 import uniq from 'lodash/uniq'
+import uniqBy from 'lodash/uniqBy'
 
+// Load in the image data from the csv file
 import fullImgData from './assets/imageData.csv'
+
+// import Zooming for image zoom
+import Zooming from 'zooming'
 
 export default {
   name: 'app',
   components: {
-    Card,
+    GameCard,
     StartCard,
+    ReferenceImage,
     EndCard,
     PandaIcon
   },
   data () {
     return {
       imageData: [],
+      referenceCardData: [],
       uniqueAnimalNames: [],
       cardsPerRound: 3,
       preGame: true,
       startRound: false,
       endRound: false,
       currentCard: 0,
+      showReferenceImageWithID: '',
       scoreIsVisible: false,
       nextButtonIsVisible: false,
-      nextButtonText: 'Start'
+      nextButtonText: 'Start',
+      zooming: {}
     }
   },
   methods: {
@@ -95,7 +109,16 @@ export default {
         row.src = require(`./assets/images/${row.imageName}`)
         animalNames.push(row.animalName)
       })
-      this.uniqueAnimalNames = uniq(animalNames)
+      // this.uniqueAnimalNames = uniq(animalNames)
+      this.referenceCardData = uniqBy(fullImgData, 'animalName')
+        .map(function (row) {
+          const srcAndName = {
+            src: row.src,
+            animalName: row.animalName
+          }
+          return srcAndName
+        })
+      this.uniqueAnimalNames = this.referenceCardData.map(row => row.animalName)
       console.log("this is the start of the game")
     },
     setDataForRound: function () {
@@ -133,6 +156,7 @@ export default {
       console.log("are you ready to play? click start!")
     },
     startRoundSetup: function () {
+      // This function removes the preGame StartCard and calls the first GameCard to start the round.
       this.preGame = false
       this.startRound = true
       this.getNextGameCard()
@@ -147,12 +171,18 @@ export default {
         return
       }
       this.currentCard++
+      this.showReferenceImageWithID = ''
       console.log("getting a new card")
     },
-    trackScore: function (correct) {
-      // This function keeps track of the score for the user
+    trackScore: function (correct, userChoice) {
+      // This function keeps track of the score afte the user submits an answer. It also shows the 'next button' to select a new card.
       this.imageData[this.currentCard - 1].identified = correct
       this.nextButtonIsVisible = true
+
+      if (!correct) {
+        this.showReferenceImageWithID = userChoice
+        console.log(userChoice)
+      }
     },
     finishRound: function () {
       // This function changes the state of the game to the end of a round in which the score is shown
@@ -171,8 +201,8 @@ export default {
     },
     resetOnInactivity: function () {
       // This function reloads the page after two minutes of inactivity.
-      clearTimeout(this.startInactiveResetTimer)
-      this.startInactiveResetTimer = setTimeout( () => window.location.reload(), 120000)
+      // clearTimeout(this.startInactiveResetTimer)
+      // this.startInactiveResetTimer = setTimeout( () => window.location.reload(), 120000)
     },
     changeNextButtonText: function () {
       if (this.currentCard === 0) {
@@ -181,11 +211,42 @@ export default {
       } else if (this.currentCard === this.cardsPerRound) {
         this.nextButtonText = 'Finish'
       } else { this.nextButtonText = 'Next' }
+    },
+    setupZooming: function () {
+      // Add listener to images for zooming functionality
+      const zooming = new Zooming({
+        bgOpacity: 0,
+        enableGrab: false,
+        scaleBase: 0.9,
+        // Add border radius to bottom of image when zoomed
+        onBeforeOpen: (zoomedImage) => {
+          console.log(zoomedImage)
+          if (zoomedImage.classList.contains('card-image')) {
+            zoomedImage.classList.add('full-border-radius')
+          }
+          document.querySelectorAll('.next-card-button').forEach(d =>
+            d.setAttribute('disabled', true)
+          )
+        },
+        // Remove border radius from bottom of image when back to card
+        onClose: (zoomedImage) => {
+          if (zoomedImage.classList.contains('card-image')) {
+            zoomedImage.classList.remove('full-border-radius')
+          }
+          document.querySelectorAll('.next-card-button').forEach(d =>
+            d.removeAttribute('disabled')
+          )
+        }
+      })
+
+      this.zooming = zooming
     }
   },
   beforeMount () {
     // Call the getImageDataOnLoad method to prepare the images and data before App component is mounted
     this.getImageDataOnLoad()
+    // Create the zooming instance with set options for later attachment to GameCard img and ReferenceImage img
+    this.setupZooming()
   }
 }
 </script>
@@ -237,7 +298,7 @@ export default {
   
   .score-icon-holder {
     position: absolute;
-    top: 50vh;
+    top: 75vh;
     left: $center-bw-card-0vw;
     transform: translateX(-50%) translateY(-50%);
     filter: drop-shadow(5px 10px 8px #24383A);
@@ -253,7 +314,8 @@ export default {
 
   .next-card-button {
     position: absolute;
-    top: 50vh;
+    z-index: -1;
+    top: 75vh;
     right: $center-bw-card-0vw;
     transform: translateX(50%) translateY(-50%);
 
