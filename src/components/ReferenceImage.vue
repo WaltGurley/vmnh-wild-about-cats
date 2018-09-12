@@ -1,5 +1,5 @@
 <template>
-  <transition>
+  <transition name="slide-up">
     <div
       class="reference-image-holder"
       v-show="cardData.animalName === referenceAnimal"
@@ -37,7 +37,6 @@ export default {
   },
   mounted () {
     this.zooming.listen('.img-zoomable')
-    console.log(this.cardData.animalName)
   }
 }
 </script>
@@ -49,30 +48,30 @@ $card-offset-x: -50%;
 $card-offset-y: -50%;
 .reference-image-holder {
   width: $card-width;
+  height: auto;
   position: absolute;
-  top: 25%;
+  top: (100vh - $card-height) / 2;
   right: 2%;
-  transform: translateY($card-offset-y);
+  // transform: translateY(0);
 
   .image-zoom-callout {
     position: absolute;
     display: flex;
     align-items: flex-end;
     pointer-events: none;
-    height: 6%;
-    top: 5%;
-    right: 1%;
+    height: $card-height * 0.06;
+    top: 0.5%;
+    right: 2.5%;
     // transform: translateX(50%);
     color: #FFFFFF;
 
     svg {
-      height: 2.6rem;
+      height: 75%;
     }
 
     .image-zoom-text {
       font-size: 1.4rem;
       line-height: 1.1em;
-      // margin: 0;
       filter: drop-shadow(2px 2px 2px #000000);
     }
   }
@@ -80,7 +79,8 @@ $card-offset-y: -50%;
   .reference-image {
     width: 100%;
     position: relative;
-    box-shadow: 10px 20px 40px #24383A;
+    top: 0;
+    box-shadow: 6px 16px 40px #24383A;
 
     &.full-border-radius {
       border-bottom-right-radius: 1.1rem;
@@ -105,11 +105,11 @@ $card-offset-y: -50%;
 }
 
 .slide-up-enter {
-  transform: translateX(50vw) translateY($card-offset-y);
+  transform: translateY(calc(-100% - (100vh - #{$card-height}) / 2 - 40px)) rotateZ(90deg);
 }
 
 .slide-up-leave-to {
-  transform: translateX(100vw) translateY($card-offset-y) rotateY(180deg);
+  transform: translateY(calc(-100% - (100vh - #{$card-height}) / 2 - 40px)) rotateZ(90deg);
 }
 
 .slide-up-leave-active, .slide-up-enter-active {

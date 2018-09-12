@@ -9,6 +9,7 @@
           v-show="scoreIsVisible"
         >
           <PandaIcon class="panda-icon"/>
+          <h2 class="app-hud-text">Score: <span class="bolded">{{ score }}</span></h2>
         </div>
       </transition>
       <StartCard
@@ -45,7 +46,7 @@
           class="next-card-button"
           v-show="nextButtonIsVisible"
           >
-            <h2 class="button-text">{{ nextButtonText }}</h2>
+            <h2 class="app-hud-text button-text">{{ nextButtonText }}</h2>
             <svg viewBox="-10 -10 137.07 183.1">
               <path d="M11.79,1.18,115.5,71.64c6,4.08,6,15.73,0,19.81L11.79,161.91C6.37,165.59,0,160.24,0,152V11.09C0,2.86,6.37-2.5,11.79,1.18Z" fill="#333537"/>
             </svg>
@@ -89,6 +90,7 @@ export default {
       referenceCardData: [],
       uniqueAnimalNames: [],
       cardsPerRound: 3,
+      score: 0,
       preGame: true,
       startRound: false,
       endRound: false,
@@ -101,15 +103,15 @@ export default {
     }
   },
   methods: {
+    // This function reads and parses the image data from the file 'imageData.csv' located in the 'src' folder and creates an 'img' element using the provided URL. It also creates an array of unique animal names.
     getImageDataOnLoad: function () {
-      // This function reads and parses the image data from the file 'imageData.csv' located in the 'src' folder and creates an 'img' element using the provided URL. It also creates an array of unique animal names.
       let animalNames = []
       fullImgData.forEach(function (row) {
         row.identified = false
         row.src = require(`./assets/images/${row.imageName}`)
         animalNames.push(row.animalName)
       })
-      // this.uniqueAnimalNames = uniq(animalNames)
+
       this.referenceCardData = uniqBy(fullImgData, 'animalName')
         .map(function (row) {
           const srcAndName = {
@@ -121,8 +123,8 @@ export default {
       this.uniqueAnimalNames = this.referenceCardData.map(row => row.animalName)
       console.log("this is the start of the game")
     },
+    // This function sets the data for the 'cardsPerRound' to be used in one round of play.
     setDataForRound: function () {
-      // This function sets the data for the 'cardsPerRound' to be used in one round of play.
       this.imageData = sampleSize(
         filter(fullImgData, img => !img.identified),
         this.cardsPerRound
@@ -147,23 +149,23 @@ export default {
         )
       })
     },
+    // This function changes the state of the game to prepare to start a round
     readyStartGame: function () {
-      // This function changes the state of the game to prepare to start a round
       this.endRound = false
       this.scoreIsVisible = true
       this.nextButtonIsVisible = true
       this.setDataForRound()
       console.log("are you ready to play? click start!")
     },
+    // This function removes the preGame StartCard and calls the first GameCard to start the round.
     startRoundSetup: function () {
-      // This function removes the preGame StartCard and calls the first GameCard to start the round.
       this.preGame = false
       this.startRound = true
       this.getNextGameCard()
       console.log("the round is beginning")
     },
+    // This function provides the iteration over the cards in a round and handles when the last card in a round is completed
     getNextGameCard: function () {
-      // This function provides the iteration over the cards in a round and handles when the last card in a round is completed
       this.nextButtonIsVisible = false
       if (this.currentCard === this.cardsPerRound) {
         this.finishRound()
@@ -174,23 +176,26 @@ export default {
       this.showReferenceImageWithID = ''
       console.log("getting a new card")
     },
+    // This function keeps track of the score after the user submits an answer. It also shows the 'next button' to select a new card.
     trackScore: function (correct, userChoice) {
-      // This function keeps track of the score afte the user submits an answer. It also shows the 'next button' to select a new card.
       this.imageData[this.currentCard - 1].identified = correct
+      this.score = this.imageData.filter(d => d.identified).length
       this.nextButtonIsVisible = true
 
+      // If the user's choice is incorrect show the reference image
       if (!correct) {
         this.showReferenceImageWithID = userChoice
-        console.log(userChoice)
       }
     },
+    // This function changes the state of the game to the end of a round in which the end of the round card is shown
     finishRound: function () {
-      // This function changes the state of the game to the end of a round in which the score is shown
       this.startRound = false
       this.endRound = true
+      this.score = 0
       // this.nextButtonText = "Play Again"
       console.log("the round is done")
     },
+    // This function uses the state of the game booleans (preGame, endRound) to run other functions to setup the game, start a round, and get the next card
     actionBasedOnGameState: function () {
       if (this.preGame) {
         this.startRoundSetup()
@@ -199,11 +204,12 @@ export default {
         this.startRoundSetup()
       } else { this.getNextGameCard() }
     },
+    // **CURRENTLY OFF FOR TESTING** This function reloads the page after two minutes of inactivity.
     resetOnInactivity: function () {
-      // This function reloads the page after two minutes of inactivity.
       // clearTimeout(this.startInactiveResetTimer)
       // this.startInactiveResetTimer = setTimeout( () => window.location.reload(), 120000)
     },
+    // This function changes the text of the next button to reflect the action that will happen when it is clicked
     changeNextButtonText: function () {
       if (this.currentCard === 0) {
         this.nextButtonText = this.preGame ? 'Start' : 'Play Again'
@@ -212,17 +218,19 @@ export default {
         this.nextButtonText = 'Finish'
       } else { this.nextButtonText = 'Next' }
     },
+    // Add listener to images in card and reference images for zooming functionality
     setupZooming: function () {
-      // Add listener to images for zooming functionality
       const zooming = new Zooming({
         bgOpacity: 0,
         enableGrab: false,
         scaleBase: 0.9,
         // Add border radius to bottom of image when zoomed
         onBeforeOpen: (zoomedImage) => {
-          console.log(zoomedImage)
           if (zoomedImage.classList.contains('card-image')) {
             zoomedImage.classList.add('full-border-radius')
+            document.querySelectorAll('.reference-image-holder').forEach(d =>
+              d.classList.add('send-backwards')
+            )
           }
           document.querySelectorAll('.next-card-button').forEach(d =>
             d.setAttribute('disabled', true)
@@ -232,6 +240,9 @@ export default {
         onClose: (zoomedImage) => {
           if (zoomedImage.classList.contains('card-image')) {
             zoomedImage.classList.remove('full-border-radius')
+            document.querySelectorAll('.reference-image-holder').forEach(d =>
+              d.classList.remove('send-backwards')
+            )
           }
           document.querySelectorAll('.next-card-button').forEach(d =>
             d.removeAttribute('disabled')
@@ -268,6 +279,19 @@ export default {
     font-weight: 700;
   }
 
+  .send-backwards {
+    z-index: -1;
+  }
+
+  .app-hud-text {
+    font-size: 3.2rem;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-top: 0;
+    margin-bottom: 0;
+    filter: drop-shadow(3px 6px 2px #24383A);
+  }
+
   button {
     cursor: pointer;
     font-size: 2.2em;
@@ -301,14 +325,16 @@ export default {
     top: 75vh;
     left: $center-bw-card-0vw;
     transform: translateX(-50%) translateY(-50%);
-    filter: drop-shadow(5px 10px 8px #24383A);
 
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
     
     .panda-icon {
       width: 100%;
       height: 100%;
+      filter: drop-shadow(5px 10px 8px #24383A);
     }
   }
 
@@ -326,13 +352,7 @@ export default {
     justify-content: center;
 
     .button-text {
-      font-size: 3.2em;
-      font-weight: 400;
-      color: #FFFFFF;
-      margin-top: 0;
-      margin-bottom: 0;
       margin-right: 0.6rem;
-      filter: drop-shadow(3px 6px 2px #24383A);
     }
 
     svg {

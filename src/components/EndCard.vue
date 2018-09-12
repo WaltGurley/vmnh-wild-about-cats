@@ -8,11 +8,11 @@
         </div>
       <div class="text-group">
         <h1 class="card-header">{{ endtext[correctAnswers].greet }}</h1>
-        <p class="card-subheader bolded">
-          {{ endtext[correctAnswers].say }}
-        </p>
         <p class="card-subheader">
           You got <span class="bolded">{{ correctAnswers }}</span> out of <span class="bolded">{{ totalNumberCards }}</span> correct.
+        </p>
+        <p class="card-subheader bolded">
+          {{ endtext[correctAnswers].say }}
         </p>
       </div>
       <p class="card-subheader bottom bolded">
