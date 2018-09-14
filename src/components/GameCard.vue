@@ -53,8 +53,9 @@
         </div>
         <div v-show="!correct">
           <h2 class="card-header">Sorry, that's incorrect</h2>
-          <p class="card-paragraph">The animal in this camera trap picture is a {{ cardData.animalName }}.</p>
-          <p class="card-paragraph">We'll put this card back in the deck for another round.</p>
+          <p class="card-paragraph big-font">The animal in this camera trap picture is {{ vowelOrConsonant(cardData.animalName) }} {{ cardData.animalName }}.</p>
+          <p class="card-paragraph big-font">For reference, the animal in the camera trap picture to the right is {{ vowelOrConsonant(userChoice) }} {{ userChoice }}.</p>
+          <p class="card-paragraph big-font">We'll put this card back in the deck for another round.</p>
         </div>
       </div>
     </div>
@@ -74,6 +75,7 @@ export default {
     return {
       isFlipped: false,
       correct: false,
+      userChoice: '',
       leftOrRightSlide: 'slide-right'
     }
   },
@@ -84,6 +86,7 @@ export default {
         this.leftOrRightSlide = 'slide-left'
       } else {
         this.correct = false
+        this.userChoice = choice
         this.leftOrRightSlide = 'slide-right'
       }
       this.$emit('score', this.correct, choice)
@@ -95,6 +98,13 @@ export default {
     },
     afterCardLeave: function () {
       this.leftOrRightSlide = 'slide-right'
+    },
+    // This function adds a precedent 'a' or 'an' before an animal's name depending on if the name begins with a consonant or a vowel
+    vowelOrConsonant: function (animalName) {
+      const vowels = ['a', 'e', 'i', 'o', 'u']
+      if (vowels.includes(animalName.charAt(0).toLowerCase())) {
+        return 'an'
+      } else return 'a'
     }
   },
   mounted () {
@@ -197,6 +207,10 @@ $card-offset-y: -50%;
       padding-left: 3rem;
       padding-right: 3rem;
       margin-top: 0.4em;
+
+      &.big-font {
+        font-size: 1.7rem;
+      }
     }
 
     .card-choices {

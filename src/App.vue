@@ -1,5 +1,6 @@
 <template>
   <div id="app" v-on:click="resetOnInactivity">
+    <!-- <PandaIcon class="test-icon panda-icon" style="width:16%"/> -->
     <div class="card-container">
       <transition
         name="slide"
@@ -9,7 +10,9 @@
           v-show="scoreIsVisible"
         >
           <PandaIcon class="panda-icon"/>
-          <h2 class="app-hud-text">Score: <span class="bolded">{{ score }}</span></h2>
+          <h2 class="app-hud-text">Score:
+            <span class="score bolded">{{ score }}</span>
+          </h2>
         </div>
       </transition>
       <StartCard
@@ -72,8 +75,9 @@ import uniqBy from 'lodash/uniqBy'
 // Load in the image data from the csv file
 import fullImgData from './assets/imageData.csv'
 
-// import Zooming for image zoom
+// import Zooming for image zoom and anime for animations
 import Zooming from 'zooming'
+import anime from 'animejs'
 
 export default {
   name: 'app',
@@ -99,6 +103,7 @@ export default {
       scoreIsVisible: false,
       nextButtonIsVisible: false,
       nextButtonText: 'Start',
+      animations: {},
       zooming: {}
     }
   },
@@ -152,6 +157,7 @@ export default {
     // This function changes the state of the game to prepare to start a round
     readyStartGame: function () {
       this.endRound = false
+      this.score = 0
       this.scoreIsVisible = true
       this.nextButtonIsVisible = true
       this.setDataForRound()
@@ -167,13 +173,17 @@ export default {
     // This function provides the iteration over the cards in a round and handles when the last card in a round is completed
     getNextGameCard: function () {
       this.nextButtonIsVisible = false
+      this.showReferenceImageWithID = ''
+      this.animations.correct.seek(0);
+      this.animations.incorrect.seek(0);
+      this.animations.correct.pause();
+      this.animations.incorrect.pause();
       if (this.currentCard === this.cardsPerRound) {
         this.finishRound()
         this.currentCard = 0
         return
       }
       this.currentCard++
-      this.showReferenceImageWithID = ''
       console.log("getting a new card")
     },
     // This function keeps track of the score after the user submits an answer. It also shows the 'next button' to select a new card.
@@ -185,13 +195,26 @@ export default {
       // If the user's choice is incorrect show the reference image
       if (!correct) {
         this.showReferenceImageWithID = userChoice
+        // Start the panda animation for incorrect choices
+        this.animations.incorrect.play()
+      } else if (correct) {
+        // Start the panda animation for correct choice
+        this.animations.correct.play()
       }
+
+      // Animate score number on change
+      anime({
+        targets: '.score',
+        scale: 1.25,
+        duration: 200,
+        direction: 'alternate',
+        easing: 'easeInOutBack'
+      })
     },
     // This function changes the state of the game to the end of a round in which the end of the round card is shown
     finishRound: function () {
       this.startRound = false
       this.endRound = true
-      this.score = 0
       // this.nextButtonText = "Play Again"
       console.log("the round is done")
     },
@@ -218,30 +241,32 @@ export default {
         this.nextButtonText = 'Finish'
       } else { this.nextButtonText = 'Next' }
     },
-    // Add listener to images in card and reference images for zooming functionality
+    // This function creates a listener to zoom in/out on touch using the Zooming package. It returns a zoom object to attach the listener to the to card images and reference images.
     setupZooming: function () {
       const zooming = new Zooming({
         bgOpacity: 0,
         enableGrab: false,
         scaleBase: 0.9,
-        // Add border radius to bottom of image when zoomed
+        // Add border radius to bottom of card image when zoomed in and lower the z-index of the visible reference image
         onBeforeOpen: (zoomedImage) => {
           if (zoomedImage.classList.contains('card-image')) {
             zoomedImage.classList.add('full-border-radius')
             document.querySelectorAll('.reference-image-holder').forEach(d =>
-              d.classList.add('send-backwards')
+              d.style.display !== 'none' ?
+                d.classList.add('send-backwards') : null
             )
           }
           document.querySelectorAll('.next-card-button').forEach(d =>
             d.setAttribute('disabled', true)
           )
         },
-        // Remove border radius from bottom of image when back to card
+        // Remove border radius from bottom of card image when zoomed out and raise the z-index of the visible reference image
         onClose: (zoomedImage) => {
           if (zoomedImage.classList.contains('card-image')) {
             zoomedImage.classList.remove('full-border-radius')
             document.querySelectorAll('.reference-image-holder').forEach(d =>
-              d.classList.remove('send-backwards')
+              d.style.display !== 'none' ?
+                d.classList.remove('send-backwards') : null
             )
           }
           document.querySelectorAll('.next-card-button').forEach(d =>
@@ -258,12 +283,82 @@ export default {
     this.getImageDataOnLoad()
     // Create the zooming instance with set options for later attachment to GameCard img and ReferenceImage img
     this.setupZooming()
+  },
+  mounted () {
+    // Animations used to show the score panda shake its head 'yes' on a correct choice
+    const correctAnimation = anime.timeline({
+      direction: 'alternate',
+      loop: true,
+      autoplay: false
+    })
+
+    correctAnimation
+      .add({
+        targets: '.score-icon-holder .head',
+        translateY: -5,
+        rotateX: '25deg',
+        offset: 0,
+        duration: 500,
+        easing: 'easeInOutSine'
+      })
+      .add({
+        targets: ['.score-icon-holder [data-name="mouth"]', '.score-icon-holder [data-name="upper-mouth"]', '.score-icon-holder [data-name="nose"]'],
+        translateY: -9,
+        offset: 0,
+        duration: 500,
+        easing: 'easeInOutSine'
+      })
+     .add({
+        targets: '.score-icon-holder [data-name="head-shadow"]',
+        translateX: -20,
+        offset: 0,
+        duration: 500,
+        easing: 'easeInOutSine'
+      })
+
+    // Animations used to show the score panda shake its head 'no' on an incorrect choice
+    const incorrectAnimation = anime.timeline({
+      direction: 'alternate',
+      loop: true,
+      autoplay: false
+    })
+
+    incorrectAnimation
+      .add({
+        targets: '.score-icon-holder .head',
+        rotateY: ['20deg', '-20deg'],
+        offset: 0,
+        duration: 800,
+        easing: 'easeInOutSine'
+      })
+      .add({
+        targets: ['.score-icon-holder [data-name="mouth"]', '.score-icon-holder [data-name="upper-mouth"]', '.score-icon-holder [data-name="nose"]', '.score-icon-holder [data-name="face-shadow"]'],
+        translateX: [-6, 6],
+        offset: 0,
+        duration: 800,
+        easing: 'easeInOutSine'
+      })
+      .add({
+        targets: ['.score-icon-holder [data-name="head-shadow"]'],
+        translateX: [-20, -10],
+        offset: 0,
+        duration: 800,
+        easing: 'easeInOutSine'
+      })
+
+    this.animations = {
+      'correct': correctAnimation,
+      'incorrect': incorrectAnimation
+    }
   }
 }
 </script>
 
 <style lang="scss">
 @import './src/assets/css/fonts.scss';
+.head {
+  transform-origin:40%;
+}
 #app {
   font-family: 'Heebo', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -336,6 +431,10 @@ export default {
       height: 100%;
       filter: drop-shadow(5px 10px 8px #24383A);
     }
+
+    .score {
+      display: inline-block;
+    }
   }
 
   .next-card-button {
@@ -378,11 +477,11 @@ export default {
   }
 
   .slide-enter, .slide-leave-to {
-    transform: translateX(calc(-1 * #{$center-bw-card-0vw} - 101%)) translateY(-50%);
+    transform: translateX(calc(-1 * #{$center-bw-card-0vw} - 100% - 13px)) translateY(-50%);
   }
 
-  .slide-fade{
-    transition-property: opacity;
+  .slide-fade {
+    transition-property: opacity, transform;
     transition-timing-function: cubic-bezier(0.25, -0.5, 0.25, 1.25);
   }
 
@@ -397,6 +496,7 @@ export default {
 
   .slide-fade-enter, .slide-fade-leave-to {
     opacity: 0;
+    transform: translateX(40%) translateY(-50%)
   }
 }
 </style>

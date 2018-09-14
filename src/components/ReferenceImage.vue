@@ -32,9 +32,6 @@ export default {
       leftOrRightSlide: 'slide-right'
     }
   },
-  methods: {
-
-  },
   mounted () {
     this.zooming.listen('.img-zoomable')
   }
