@@ -200,16 +200,16 @@ export default {
       } else if (correct) {
         // Start the panda animation for correct choice
         this.animations.correct.play()
-      }
 
-      // Animate score number on change
-      anime({
-        targets: '.score',
-        scale: 1.25,
-        duration: 200,
-        direction: 'alternate',
-        easing: 'easeInOutBack'
-      })
+        // Animate score number on change
+        anime({
+          targets: '.score',
+          scale: 1.25,
+          duration: 200,
+          direction: 'alternate',
+          easing: 'easeInOutBack'
+        })
+      }
     },
     // This function changes the state of the game to the end of a round in which the end of the round card is shown
     finishRound: function () {
