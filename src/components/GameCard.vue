@@ -14,6 +14,7 @@
           v-bind:src="cardData.src" 
           v-bind:alt="cardData.altText"
           class="card-image top-border-radius img-zoomable"
+          v-bind:class="{ 'no-pointer-event': isFlipped }"
           data-action="zoom"
         >
         <aside class="image-zoom-callout">
@@ -53,8 +54,8 @@
         </div>
         <div v-show="!correct">
           <h2 class="card-header">Sorry, that's incorrect</h2>
-          <p class="card-paragraph big-font">The animal in this camera trap picture is {{ vowelOrConsonant(cardData.animalName) }} {{ cardData.animalName }}.</p>
-          <p class="card-paragraph big-font">For reference, the animal in the camera trap picture to the right is {{ vowelOrConsonant(userChoice) }} {{ userChoice }}.</p>
+          <p class="card-paragraph big-font">The animal in this camera trap picture is {{ vowelOrConsonant(cardData.animalName) }} <span class="bolded">{{ cardData.animalName }}</span>.</p>
+          <p class="card-paragraph big-font">For reference, the animal in the camera trap picture to the right is {{ vowelOrConsonant(userChoice) }}  <span class="bolded">{{ userChoice }}</span>.</p>
           <p class="card-paragraph big-font">We'll put this card back in the deck for another round.</p>
         </div>
       </div>

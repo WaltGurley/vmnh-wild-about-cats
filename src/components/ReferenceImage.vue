@@ -10,7 +10,7 @@
         class="reference-image full-border-radius img-zoomable"
         data-action="zoom"
       >
-      <aside class="image-zoom-callout">
+      <aside class="image-zoom-callout reference-image-callout">
         <p class="image-zoom-text">Touch to zoom</p>
         <TouchIcon/>
       </aside>
@@ -22,7 +22,7 @@
 import TouchIcon from '../assets/touchIcon2.svg'
 
 export default {
-  name: 'ReferenceCard',
+  name: 'ReferenceImage',
   components: {
     TouchIcon
   },
@@ -101,12 +101,8 @@ $card-offset-y: -50%;
   transition-timing-function: cubic-bezier(0.25, -0.5, 0.25, 1.25);
 }
 
-.slide-up-enter {
-  transform: translateY(calc(-100% - (100vh - #{$card-height}) / 2 - 40px)) rotateZ(90deg);
-}
-
-.slide-up-leave-to {
-  transform: translateY(calc(-100% - (100vh - #{$card-height}) / 2 - 40px)) rotateZ(90deg);
+.slide-up-enter, .slide-up-leave-to {
+  transform: translateY(calc(-100% - (100vh - #{$card-height}))) rotateZ(90deg);
 }
 
 .slide-up-leave-active, .slide-up-enter-active {

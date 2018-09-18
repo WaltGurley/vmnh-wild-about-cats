@@ -69,7 +69,6 @@ import PandaIcon from './assets/panda.svg'
 import shuffle from 'lodash/shuffle'
 import sampleSize from 'lodash/sampleSize'
 import filter from 'lodash/filter'
-import uniq from 'lodash/uniq'
 import uniqBy from 'lodash/uniqBy'
 
 // Load in the image data from the csv file
@@ -93,7 +92,7 @@ export default {
       imageData: [],
       referenceCardData: [],
       uniqueAnimalNames: [],
-      cardsPerRound: 3,
+      cardsPerRound: 5,
       score: 0,
       preGame: true,
       startRound: false,
@@ -126,7 +125,6 @@ export default {
           return srcAndName
         })
       this.uniqueAnimalNames = this.referenceCardData.map(row => row.animalName)
-      console.log("this is the start of the game")
     },
     // This function sets the data for the 'cardsPerRound' to be used in one round of play.
     setDataForRound: function () {
@@ -161,14 +159,12 @@ export default {
       this.scoreIsVisible = true
       this.nextButtonIsVisible = true
       this.setDataForRound()
-      console.log("are you ready to play? click start!")
     },
     // This function removes the preGame StartCard and calls the first GameCard to start the round.
     startRoundSetup: function () {
       this.preGame = false
       this.startRound = true
       this.getNextGameCard()
-      console.log("the round is beginning")
     },
     // This function provides the iteration over the cards in a round and handles when the last card in a round is completed
     getNextGameCard: function () {
@@ -184,7 +180,6 @@ export default {
         return
       }
       this.currentCard++
-      console.log("getting a new card")
     },
     // This function keeps track of the score after the user submits an answer. It also shows the 'next button' to select a new card.
     trackScore: function (correct, userChoice) {
@@ -216,7 +211,6 @@ export default {
       this.startRound = false
       this.endRound = true
       // this.nextButtonText = "Play Again"
-      console.log("the round is done")
     },
     // This function uses the state of the game booleans (preGame, endRound) to run other functions to setup the game, start a round, and get the next card
     actionBasedOnGameState: function () {
@@ -227,10 +221,10 @@ export default {
         this.startRoundSetup()
       } else { this.getNextGameCard() }
     },
-    // **CURRENTLY OFF FOR TESTING** This function reloads the page after two minutes of inactivity.
+    // This function reloads the page after two minutes of inactivity.
     resetOnInactivity: function () {
-      // clearTimeout(this.startInactiveResetTimer)
-      // this.startInactiveResetTimer = setTimeout( () => window.location.reload(), 120000)
+      clearTimeout(this.startInactiveResetTimer)
+      this.startInactiveResetTimer = setTimeout( () => window.location.reload(), 120000)
     },
     // This function changes the text of the next button to reflect the action that will happen when it is clicked
     changeNextButtonText: function () {
@@ -247,31 +241,39 @@ export default {
         bgOpacity: 0,
         enableGrab: false,
         scaleBase: 0.9,
-        // Add border radius to bottom of card image when zoomed in and lower the z-index of the visible reference image
+        // Add border radius to bottom of card image when zoomed in, lower the z-index of the visible reference image, and set image zoom callout text and icon display to none
         onBeforeOpen: (zoomedImage) => {
+          document.querySelectorAll('.next-card-button').forEach(d =>
+            d.setAttribute('disabled', true)
+          )
           if (zoomedImage.classList.contains('card-image')) {
             zoomedImage.classList.add('full-border-radius')
             document.querySelectorAll('.reference-image-holder').forEach(d =>
               d.style.display !== 'none' ?
                 d.classList.add('send-backwards') : null
             )
+          } else {
+            document.querySelectorAll('.image-zoom-callout.reference-image-callout').forEach(d =>
+              d.style.visibility = 'hidden'
+            )
           }
-          document.querySelectorAll('.next-card-button').forEach(d =>
-            d.setAttribute('disabled', true)
-          )
         },
-        // Remove border radius from bottom of card image when zoomed out and raise the z-index of the visible reference image
+        // Remove border radius from bottom of card image when zoomed out, raise the z-index of the visible reference image, and make image zoom callout text and icon visible
         onClose: (zoomedImage) => {
+          document.querySelectorAll('.next-card-button').forEach(d =>
+            d.removeAttribute('disabled')
+          )
           if (zoomedImage.classList.contains('card-image')) {
             zoomedImage.classList.remove('full-border-radius')
             document.querySelectorAll('.reference-image-holder').forEach(d =>
               d.style.display !== 'none' ?
                 d.classList.remove('send-backwards') : null
             )
+          } else {
+            document.querySelectorAll('.image-zoom-callout.reference-image-callout').forEach(d =>
+              d.style.visibility = 'visible'
+            )
           }
-          document.querySelectorAll('.next-card-button').forEach(d =>
-            d.removeAttribute('disabled')
-          )
         }
       })
 
@@ -298,27 +300,27 @@ export default {
         translateY: -5,
         rotateX: '25deg',
         offset: 0,
-        duration: 500,
+        duration: 400,
         easing: 'easeInOutSine'
       })
       .add({
-        targets: ['.score-icon-holder [data-name="mouth"]', '.score-icon-holder [data-name="upper-mouth"]', '.score-icon-holder [data-name="nose"]'],
+        targets: ['.score-icon-holder [data-name="mouth"]', '.score-icon-holder [data-name="upper-mouth"]', '.score-icon-holder [data-name="nose"]', '.score-icon-holder [data-name="face-shadow"]'],
         translateY: -9,
         offset: 0,
-        duration: 500,
+        duration: 400,
         easing: 'easeInOutSine'
       })
      .add({
         targets: '.score-icon-holder [data-name="head-shadow"]',
         translateX: -20,
         offset: 0,
-        duration: 500,
+        duration: 400,
         easing: 'easeInOutSine'
       })
 
     // Animations used to show the score panda shake its head 'no' on an incorrect choice
     const incorrectAnimation = anime.timeline({
-      direction: 'alternate',
+      direction: 'normal',
       loop: true,
       autoplay: false
     })
@@ -326,24 +328,45 @@ export default {
     incorrectAnimation
       .add({
         targets: '.score-icon-holder .head',
-        rotateY: ['20deg', '-20deg'],
-        offset: 0,
-        duration: 800,
-        easing: 'easeInOutSine'
+        rotateY: [
+          { value: '-20deg', duration: 200, easing: 'easeInOutSine' },
+          { value: '20deg', duration: 400, easing: 'easeInOutSine' },
+          { value: '-20deg', duration: 400, easing: 'easeInOutSine' },
+          { value: 0, duration: 400, easing: [0.175, 0.885, 1.000, 1.650] }
+        ],
+        offset: 400,
+      })
+      .add({
+        targets: '.score-icon-holder [data-name="ears"]',
+        rotateY: [
+          { value: '-25deg', duration: 200, easing: 'easeInOutSine' },
+          { value: '25deg', duration: 400, easing: 'easeInOutSine' },
+          { value: '-25deg', duration: 400, easing: 'easeInOutSine' },
+          { value: 0, duration: 400, easing: [0.175, 0.885, 1.000, 1.650] }
+        ],
+        offset: 400,
       })
       .add({
         targets: ['.score-icon-holder [data-name="mouth"]', '.score-icon-holder [data-name="upper-mouth"]', '.score-icon-holder [data-name="nose"]', '.score-icon-holder [data-name="face-shadow"]'],
-        translateX: [-6, 6],
-        offset: 0,
-        duration: 800,
-        easing: 'easeInOutSine'
+        translateX: [
+          { value: -6, duration: 200, easing: 'easeInOutSine' },
+          { value: 6, duration: 400, easing: 'easeInOutSine' },
+          { value: -6, duration: 400, easing: 'easeInOutSine' },
+          { value: 0, duration: 400, easing: [0.175, 0.885, 1.000, 1.650] }
+        ],
+        offset: 400,
       })
       .add({
         targets: ['.score-icon-holder [data-name="head-shadow"]'],
-        translateX: [-20, -10],
-        offset: 0,
-        duration: 800,
-        easing: 'easeInOutSine'
+        translateX:[
+          { value: -20, duration: 200, easing: 'easeInOutSine' },
+          { value: 0, duration: 200, easing: 'linear' },
+          { value: -10, duration: 200, easing: 'easeInOutSine' },
+          { value: 0, duration: 200, easing: 'linear' },
+          { value: -20, duration: 200, easing: 'easeInOutSine' },
+          { value: 0, duration: 400, easing: [0.175, 0.885, 1.000, 1.650] }
+        ],
+        offset: 400
       })
 
     this.animations = {
@@ -356,9 +379,6 @@ export default {
 
 <style lang="scss">
 @import './src/assets/css/fonts.scss';
-.head {
-  transform-origin:40%;
-}
 #app {
   font-family: 'Heebo', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -425,11 +445,15 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    
+
     .panda-icon {
       width: 100%;
       height: 100%;
       filter: drop-shadow(5px 10px 8px #24383A);
+    
+      .head, [data-name="ears"] {
+        transform-origin:40%;
+      }
     }
 
     .score {

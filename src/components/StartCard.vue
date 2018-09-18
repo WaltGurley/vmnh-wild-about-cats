@@ -23,7 +23,7 @@
         Next
       </button>
     </div>
-    <div v-on:click="flip" class="card-side back">
+    <div class="card-side back">
       <div class="text-group">
         <h1 class="card-header">How to play</h1>
         <p class="card-paragraph">
