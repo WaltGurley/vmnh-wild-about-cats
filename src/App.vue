@@ -394,6 +394,10 @@ export default {
     font-weight: 700;
   }
 
+  .no-pointer-event {
+    pointer-events: none;
+  }
+
   .send-backwards {
     z-index: -1;
   }
