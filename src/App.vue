@@ -126,12 +126,15 @@ export default {
         })
       this.uniqueAnimalNames = this.referenceCardData.map(row => row.animalName)
     },
-    // This function sets the data for the 'cardsPerRound' to be used in one round of play.
+    // This function sets the data for the 'cardsPerRound' to be used in one round of play. The full image data is shuffled, then filtered by unique name to prevent duplication of an animal type in one round, and then filtered to ensure an already identified image is not shown
     setDataForRound: function () {
       this.imageData = sampleSize(
-        filter(fullImgData, img => !img.identified),
+        filter(uniqBy(shuffle(fullImgData), 'animalName'),
+          img => !img.identified
+        ),
         this.cardsPerRound
       )
+      fullImgData.forEach(d => console.log(d.identified))
 
       const numberOfChoices = 3
       const uniqueNames = this.uniqueAnimalNames
@@ -182,17 +185,17 @@ export default {
       this.currentCard++
     },
     // This function keeps track of the score after the user submits an answer. It also shows the 'next button' to select a new card.
-    trackScore: function (correct, userChoice) {
-      this.imageData[this.currentCard - 1].identified = correct
+    trackScore: function (isCorrect, userChoice) {
+      this.imageData[this.currentCard - 1].identified = isCorrect
       this.score = this.imageData.filter(d => d.identified).length
       this.nextButtonIsVisible = true
 
       // If the user's choice is incorrect show the reference image
-      if (!correct) {
+      if (!isCorrect) {
         this.showReferenceImageWithID = userChoice
         // Start the panda animation for incorrect choices
         this.animations.incorrect.play()
-      } else if (correct) {
+      } else if (isCorrect) {
         // Start the panda animation for correct choice
         this.animations.correct.play()
 
@@ -380,7 +383,7 @@ export default {
 <style lang="scss">
 @import './src/assets/css/fonts.scss';
 #app {
-  font-family: 'Heebo', Helvetica, Arial, sans-serif;
+  font-family: 'Gentium Basic', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;

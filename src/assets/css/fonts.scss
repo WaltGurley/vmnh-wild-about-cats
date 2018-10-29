@@ -1,24 +1,57 @@
 /* heebo-300 - latin */
+// @font-face {
+//   font-family: 'Heebo';
+//   font-style: normal;
+//   font-weight: 300;
+//   src: local('Heebo Light'), local('Heebo-Light'),
+//        url('./assets/fonts/heebo-v3-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+// }
+// /* heebo-regular - latin */
+// @font-face {
+//   font-family: 'Heebo';
+//   font-style: normal;
+//   font-weight: 400;
+//   src: local('Heebo'), local('Heebo-Regular'),
+//        url('./assets/fonts/heebo-v3-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+// }
+// /* heebo-700 - latin */
+// @font-face {
+//   font-family: 'Heebo';
+//   font-style: normal;
+//   font-weight: 700;
+//   src: local('Heebo Bold'), local('Heebo-Bold'),
+//        url('./assets/fonts/heebo-v3-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+// }
+
+/* gentium-basic-regular - latin */
 @font-face {
-  font-family: 'Heebo';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Heebo Light'), local('Heebo-Light'),
-       url('./assets/fonts/heebo-v3-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-}
-/* heebo-regular - latin */
-@font-face {
-  font-family: 'Heebo';
+  font-family: 'Gentium Basic';
   font-style: normal;
   font-weight: 400;
-  src: local('Heebo'), local('Heebo-Regular'),
-       url('./assets/fonts/heebo-v3-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+  src: local('Gentium Basic'), local('GentiumBasic'),
+       url('./assets/fonts/gentium-basic-v9-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
 }
-/* heebo-700 - latin */
+/* gentium-basic-italic - latin */
 @font-face {
-  font-family: 'Heebo';
+  font-family: 'Gentium Basic';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Gentium Basic Italic'), local('GentiumBasic-Italic'),
+       url('./assets/fonts/gentium-basic-v9-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+}
+/* gentium-basic-700 - latin */
+@font-face {
+  font-family: 'Gentium Basic';
   font-style: normal;
   font-weight: 700;
-  src: local('Heebo Bold'), local('Heebo-Bold'),
-       url('./assets/fonts/heebo-v3-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+  src: local('Gentium Basic Bold'), local('GentiumBasic-Bold'),
+       url('./assets/fonts/gentium-basic-v9-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+}
+/* gentium-basic-700italic - latin */
+@font-face {
+  font-family: 'Gentium Basic';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Gentium Basic Bold Italic'), local('GentiumBasic-BoldItalic'),
+       url('./assets/fonts/gentium-basic-v9-latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
 }
