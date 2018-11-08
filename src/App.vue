@@ -46,7 +46,7 @@
       >
         <div
           v-on:click="actionBasedOnGameState"
-          class="next-card-button"
+          class="next-card-button app-hud-button-and-text"
           v-show="nextButtonIsVisible"
           >
             <h2 class="app-hud-text button-text">{{ nextButtonText }}</h2>
@@ -54,6 +54,30 @@
               <path d="M11.79,1.18,115.5,71.64c6,4.08,6,15.73,0,19.81L11.79,161.91C6.37,165.59,0,160.24,0,152V11.09C0,2.86,6.37-2.5,11.79,1.18Z" fill="#333537"/>
             </svg>
         </div>
+      </transition>
+      <transition
+        name="slide-fade"
+      >
+      <div
+        v-on:click=""
+        class="restart-game-button app-hud-button-and-text"
+      >
+        <svg viewBox="-15 -15 185 204">
+          <path d="M91 11V4a4 4 0 0 0-7-3L67 19a4 4 0 0 0 0 5l17 18a4 4 0 0 0 7-3v-8a55 55 0 0 1 42 40 55 55 0 0 1-5 41 10 10 0 0 0 18 10A75 75 0 0 0 91 11zM64 163v7a4 4 0 0 0 7 3l18-18a4 4 0 0 0 0-5l-18-18a4 4 0 0 0-7 3v8a55 55 0 0 1-37-81 10 10 0 0 0-17-10 75 75 0 0 0 54 111z"/>
+        </svg>
+        <h2 class="app-hud-text button-text">Restart Game</h2>
+      </div>
+      </transition>
+      <transition
+        name="slide-fade"
+      >
+      <div
+        v-on:click="console.log('about')"
+        class="info-button app-hud-button-and-text"
+      >
+        <h2 class="app-hud-text info-button-icon">i</h2>
+        <h2 class="app-hud-text button-text">About</h2>
+      </div>
       </transition>
     </div>
   </div>
@@ -414,8 +438,19 @@ export default {
     filter: drop-shadow(3px 6px 2px #24383A);
   }
 
+  .app-hud-button-and-text {
+    cursor: pointer;
+    height: 7.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   button {
     cursor: pointer;
+    font-family: 'Gentium Basic', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-size: 2.2em;
     font-weight: 400;
     color: #FFFFFF;
@@ -468,18 +503,58 @@ export default {
     }
   }
 
+  .restart-game-button {
+    position: absolute;
+    z-index: -1;
+    padding-left: 1.2rem;
+
+    .button-text {
+      margin-left: 0.6rem;
+    }
+
+    svg {
+      background-color: #333537;
+      border-radius: 50%;
+      border-style: solid;
+      border-width: 5px;
+      border-color: #FFFFFF;
+      width: 2.8vw;
+      height: 2.8vw;
+      filter: drop-shadow(3px 6px 2px #24383A);
+
+      path {
+        fill: #ffffff;
+      }
+    }
+  }
+
+  .info-button {
+    position: absolute;
+    z-index: -2;
+    padding-left: 1.2rem;
+    padding-top: 7.5vh;
+
+    .info-button-icon {
+      font-weight: 700;
+      margin-right: 0.6rem;
+      text-align: center;
+      text-anchor: middle;
+      background-color: #333537;
+      width: 2.8vw;
+      height: 2.8vw;
+      border-radius: 50%;
+      border-style: solid;
+      border-width: 5px;
+      border-color: #FFFFFF;
+    }
+  }
+
   .next-card-button {
     position: absolute;
     z-index: -1;
     top: 75vh;
     right: $center-bw-card-0vw;
     transform: translateX(50%) translateY(-50%);
-
-    cursor: pointer;
-    height: 7.5vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     .button-text {
       margin-right: 0.6rem;
