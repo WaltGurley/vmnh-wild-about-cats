@@ -184,7 +184,7 @@ $card-offset-y: -50%;
     }
 
     .card-header {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       font-weight: 700;
       text-align: center;
       margin-bottom: 0;
@@ -204,13 +204,13 @@ $card-offset-y: -50%;
     }
 
     .card-paragraph {
-      font-size: 1.4rem;
-      padding-left: 3rem;
-      padding-right: 3rem;
+      font-size: 1.8rem;
+      padding-left: 2.8rem;
+      padding-right: 2.8rem;
       margin-top: 0.4em;
 
       &.big-font {
-        font-size: 1.7rem;
+        font-size: 2.0rem;
       }
     }
 

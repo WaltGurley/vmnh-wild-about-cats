@@ -114,7 +114,7 @@ $card-offset-y: -50%;
     }
 
     .card-subheader {
-      font-size: 2.2rem;
+      font-size: 2.6rem;
       font-weight: 400;
       text-align: center;
       margin-top: 0;
@@ -133,10 +133,10 @@ $card-offset-y: -50%;
     }
 
     .card-paragraph {
-      font-size: 1.9rem;
+      font-size: 2.4rem;
       font-weight: 400;
-      padding-left: 3rem;
-      padding-right: 3rem;
+      padding-left: 2.8rem;
+      padding-right: 2.8rem;
       margin-top: 1rem;
       margin-bottom: 0;
     }
@@ -169,12 +169,12 @@ $card-offset-y: -50%;
 
 .slidable {
   transition-property: transform;
-  transition-duration: 1.2s;
+  transition-duration: 1.6s;
   transition-timing-function: cubic-bezier(0.25, -0.5, 0.25, 1.25);
 
   &.slide-in-out-from-bottom-left {
-  transform-origin: left;
-    transform: rotateX(180deg) rotateZ(-90deg) translateX(7.5vh) translateY($card-offset-y);
+    transform-origin: left;
+    transform: rotateX(180deg) rotateZ(-90deg) translateX(calc(7.5vh + 40px)) translateY($card-offset-y);
   }
 }
 

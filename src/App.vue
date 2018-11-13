@@ -56,27 +56,19 @@
         </div>
       </transition>
       <transition
-        name="slide-fade"
+        name="slide"
+        enter-class="slide-horizontal"
+        leave-to-class="slide-horizontal"
       >
       <div
         v-on:click=""
+        v-show="scoreIsVisible"
         class="restart-game-button app-hud-button-and-text"
       >
         <svg viewBox="-15 -15 185 204">
           <path d="M91 11V4a4 4 0 0 0-7-3L67 19a4 4 0 0 0 0 5l17 18a4 4 0 0 0 7-3v-8a55 55 0 0 1 42 40 55 55 0 0 1-5 41 10 10 0 0 0 18 10A75 75 0 0 0 91 11zM64 163v7a4 4 0 0 0 7 3l18-18a4 4 0 0 0 0-5l-18-18a4 4 0 0 0-7 3v8a55 55 0 0 1-37-81 10 10 0 0 0-17-10 75 75 0 0 0 54 111z"/>
         </svg>
         <h2 class="app-hud-text button-text">Restart Game</h2>
-      </div>
-      </transition>
-      <transition
-        name="slide-fade"
-      >
-      <div
-        v-on:click="console.log('about')"
-        class="info-button app-hud-button-and-text"
-      >
-        <h2 class="app-hud-text info-button-icon">i</h2>
-        <h2 class="app-hud-text button-text">About</h2>
       </div>
       </transition>
     </div>
@@ -118,7 +110,7 @@ export default {
       uniqueAnimalNames: [],
       cardsPerRound: 5,
       score: 0,
-      preGame: true,
+      preGame: false,
       startRound: false,
       endRound: false,
       currentCard: 0,
@@ -314,6 +306,8 @@ export default {
     this.setupZooming()
   },
   mounted () {
+    this.preGame = true;
+    
     // Animations used to show the score panda shake its head 'yes' on a correct choice
     const correctAnimation = anime.timeline({
       direction: 'alternate',
@@ -506,20 +500,20 @@ export default {
   .restart-game-button {
     position: absolute;
     z-index: -1;
-    padding-left: 1.2rem;
+    left: 2%;
+    top: 7.5vh;
 
     .button-text {
       margin-left: 0.6rem;
     }
 
     svg {
-      background-color: #333537;
-      border-radius: 50%;
-      border-style: solid;
-      border-width: 5px;
-      border-color: #FFFFFF;
-      width: 2.8vw;
-      height: 2.8vw;
+      // background-color: #333537;
+      // border-radius: 1.2rem;
+      // border-style: solid;
+      // border-width: 5px;
+      // border-color: #FFFFFF;
+      height: 80%;
       filter: drop-shadow(3px 6px 2px #24383A);
 
       path {
@@ -528,26 +522,26 @@ export default {
     }
   }
 
-  .info-button {
-    position: absolute;
-    z-index: -2;
-    padding-left: 1.2rem;
-    padding-top: 7.5vh;
+  // .info-button {
+  //   position: absolute;
+  //   z-index: -2;
+  //   padding-left: 1.2rem;
+  //   padding-top: 7.5vh;
 
-    .info-button-icon {
-      font-weight: 700;
-      margin-right: 0.6rem;
-      text-align: center;
-      text-anchor: middle;
-      background-color: #333537;
-      width: 2.8vw;
-      height: 2.8vw;
-      border-radius: 50%;
-      border-style: solid;
-      border-width: 5px;
-      border-color: #FFFFFF;
-    }
-  }
+  //   .info-button-icon {
+  //     font-weight: 700;
+  //     margin-right: 0.6rem;
+  //     text-align: center;
+  //     text-anchor: middle;
+  //     background-color: #333537;
+  //     width: 2.8vw;
+  //     height: 2.8vw;
+  //     border-radius: 50%;
+  //     border-style: solid;
+  //     border-width: 5px;
+  //     border-color: #FFFFFF;
+  //   }
+  // }
 
   .next-card-button {
     position: absolute;
@@ -572,34 +566,46 @@ export default {
     }
   }
 
+  // panda score icon and restart game button animation
   .slide {
     transition-property: transform;
     transition-timing-function: cubic-bezier(0.25, -0.5, 0.25, 1.25);
   }
 
+  // panda score icon animation
   .slide-enter-active, .slide-leave-active {
     transition-delay: 0.6s;
     transition-duration: 1.2s;
   }
 
+  // panda score icon animation
   .slide-enter, .slide-leave-to {
     transform: translateX(calc(-1 * #{$center-bw-card-0vw} - 100% - 13px)) translateY(-50%);
   }
 
+  // restart game button animation
+  .slide-horizontal {
+    transform: translateX(-100%)
+  }
+
+  // start/next button animation
   .slide-fade {
     transition-property: opacity, transform;
     transition-timing-function: cubic-bezier(0.25, -0.5, 0.25, 1.25);
   }
 
+  // start/next button animation
   .slide-fade-enter-active {
     transition-delay: 1.2s;
     transition-duration: 1.2s;
   }
 
+  // start/next button animation
   .slide-fade-leave-active {
     transition-duration: 0.4s;
   }
 
+  // start/next button animation
   .slide-fade-enter, .slide-fade-leave-to {
     opacity: 0;
     transform: translateX(40%) translateY(-50%)
