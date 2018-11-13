@@ -205,9 +205,9 @@ $card-offset-y: -50%;
 
     .card-paragraph {
       font-size: 1.8rem;
-      padding-left: 2.8rem;
-      padding-right: 2.8rem;
-      margin-top: 0.4em;
+      padding-left: 1.4rem;
+      padding-right: 1.4rem;
+      margin-top: 0.8em;
 
       &.big-font {
         font-size: 2.0rem;

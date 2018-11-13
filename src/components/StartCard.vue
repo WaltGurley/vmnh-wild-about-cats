@@ -1,49 +1,54 @@
 <template>
-  <div class="card flippable slidable"
-    v-bind:class="[{ flipped: isFlipped }, slideType]"
+  <transition
+    name="slide-bottom-left"
+    v-on:leave="onCardLeave"
   >
-    <div class="card-side front">
+    <div class="card flippable"
+      v-show="showStartCard"
+      v-bind:class="{ flipped: isFlipped }"
+    >
+      <div class="card-side front">
         <div class="panda-icon-holder">
           <PandaIcon class="panda-icon"/>
         </div>
-
-      <div class="text-group">
-        <h1 class="card-header">Under the Umbrella</h1>
-        <p class="card-paragraph">
-          How well do you know the animals in the mountains of China?
-        </p>
-        <p class="card-paragraph">
-          Test your ability to identify some of the animals that share a habitat with the giant panda.
-        </p>
+        <div class="text-group">
+          <h1 class="card-header">Under the Umbrella</h1>
+          <p class="card-paragraph">
+            How well do you know the animals in the mountains of China?
+          </p>
+          <p class="card-paragraph">
+            Test your ability to identify some of the animals that share a habitat with the giant panda.
+          </p>
+        </div>
+        <button
+          v-on:click="flip"
+          class="card-button"
+        >
+          Next
+        </button>
       </div>
-      <button
-        v-on:click="flip"
-        class="card-button"
-      >
-        Next
-      </button>
-    </div>
-    <div class="card-side back">
-      <div class="text-group">
-        <h1 class="card-header">How to play</h1>
-        <p class="card-paragraph">
-          Each card shows a photo taken by a camera trap in China.
-        </p>
-        <p class="card-paragraph">
-          Select the correct name of the animal in the photo from the three choices.
-        </p>
-        <p class="card-paragraph">
-          A panda will keep track of your score.
-        </p>
-        <p class="card-paragraph">
-          Don't worry if you choose incorrectly: You can try again. The game randomly selects from dozens of images, so you'll get to learn something new each time!
-        </p>
+      <div class="card-side back">
+        <div class="text-group">
+          <h1 class="card-header">How to play</h1>
+          <p class="card-paragraph">
+            Each card shows a photo taken with a camera trap in China.
+          </p>
+          <p class="card-paragraph">
+            Select the correct name of the animal in the photo from the three choices.
+          </p>
+          <p class="card-paragraph">
+            A panda will keep track of your score.
+          </p>
+          <p class="card-paragraph">
+            Don't worry if you choose incorrectly: You can try again. The game randomly selects from dozens of images, so you'll get to learn something new each time!
+          </p>
+        </div>
+        <h2 class="card-subheader bolded">
+          Press Start to begin
+        </h2>
       </div>
-      <h2 class="card-subheader bolded">
-        Press Start to begin
-      </h2>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -63,14 +68,10 @@ export default {
     flip: function () {
       this.isFlipped = !this.isFlipped
       this.$emit('readyStartGame')
-    }
-  },
-  computed: {
-    slideType: function () {
-      // This function toggles the position and animation of the start card
-      const slideType = this.showStartCard ? '' :
-        'slide-in-out-from-bottom-left'
-      return slideType
+    },
+    onCardLeave: function () {
+      // Must remove the flipped transform for leave transition to work
+      this.isFlipped = false
     }
   }
 }
@@ -167,16 +168,40 @@ $card-offset-y: -50%;
   }
 }
 
-.slidable {
+.slide-bottom-left {
   transition-property: transform;
   transition-duration: 1.6s;
   transition-timing-function: cubic-bezier(0.25, -0.5, 0.25, 1.25);
-
-  &.slide-in-out-from-bottom-left {
-    transform-origin: left;
-    transform: rotateX(180deg) rotateZ(-90deg) translateX(calc(7.5vh + 40px)) translateY($card-offset-y);
-  }
+  transform-origin: left;
 }
+
+// card slide animation
+.slide-bottom-left-active, .slide-bottom-left-active {
+  transition-delay: 0.6s;
+  transition-duration: 1.2s;
+}
+
+// card slide enter animation starting position
+.slide-bottom-left-enter {
+  transform: rotateZ(-90deg) translateX(calc(#{-$card-width} - 7.5vh - 48px)) translateY($card-offset-y);
+}
+
+// card slide exit animation final position
+.slide-bottom-left-leave-to {
+  transform: rotateX(180deg) rotateZ(-90deg) translateX(calc(7.5vh + 40px)) translateY($card-offset-y);
+}
+
+
+// .slidable {
+//   transition-property: transform;
+//   transition-duration: 1.6s;
+//   transition-timing-function: cubic-bezier(0.25, -0.5, 0.25, 1.25);
+
+//   &.slide-in-out-from-bottom-left {
+//     transform-origin: left;
+//     transform: rotateX(180deg) rotateZ(-90deg) translateX(calc(7.5vh + 40px)) translateY($card-offset-y);
+//   }
+// }
 
 .flippable {
   transition-property: transform, box-shadow;

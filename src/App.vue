@@ -61,8 +61,8 @@
         leave-to-class="slide-horizontal"
       >
       <div
-        v-on:click=""
-        v-show="scoreIsVisible"
+        v-on:click="restartGame"
+        v-show="startRound"
         class="restart-game-button app-hud-button-and-text"
       >
         <svg viewBox="-15 -15 185 204">
@@ -126,6 +126,7 @@ export default {
     // This function reads and parses the image data from the file 'imageData.csv' located in the 'src' folder and creates an 'img' element using the provided URL. It also creates an array of unique animal names.
     getImageDataOnLoad: function () {
       let animalNames = []
+      
       fullImgData.forEach(function (row) {
         row.identified = false
         row.src = require(`./assets/images/${row.imageName}`)
@@ -144,13 +145,29 @@ export default {
     },
     // This function sets the data for the 'cardsPerRound' to be used in one round of play. The full image data is shuffled, then filtered by unique name to prevent duplication of an animal type in one round, and then filtered to ensure an already identified image is not shown
     setDataForRound: function () {
-      this.imageData = sampleSize(
-        filter(uniqBy(shuffle(fullImgData), 'animalName'),
-          img => !img.identified
-        ),
+      // Get the number of images that have not been identified
+      const numNotIdentified = filter(fullImgData, img =>
+        !img.identified).length
+      // If the number of unidentified animals is less than the number of cards in a round, reset all of the images to a state of unidentified
+      if (numNotIdentified < this.cardsPerRound) {
+        fullImgData.forEach(d => d.identified = false)
+      }
+
+      // Create an array consisting of unique animals that have not yet been identified
+      const uniqueAnimalsNotIdentified = filter(
+        uniqBy(shuffle(fullImgData), 'animalName'),
+        img => !img.identified
+      )
+      // If the number of unique, unidentified animals is less than the number of cards in a round set the number of cards in a round to the number of unique, unidentified animals
+      if (uniqueAnimalsNotIdentified.length < this.cardsPerRound) {
+        this.cardsPerRound = uniqueAnimalsNotIdentified.length;
+      }
+
+      // Set the image data that will populate the cards in a round
+      this.imageData = sampleSize(uniqueAnimalsNotIdentified,
         this.cardsPerRound
       )
-      fullImgData.forEach(d => console.log(d.identified))
+      console.log(numNotIdentified, this.imageData.length, this.cardsPerRound, fullImgData)
 
       const numberOfChoices = 3
       const uniqueNames = this.uniqueAnimalNames
@@ -200,6 +217,15 @@ export default {
       }
       this.currentCard++
     },
+    // This function changes the text of the next button to reflect the action that will happen when it is clicked
+    changeNextButtonText: function () {
+      if (this.currentCard === 0) {
+        this.nextButtonText = this.preGame ? 'Start' : 'Play Again'
+        this.nextButtonIsVisible = true
+      } else if (this.currentCard === this.cardsPerRound) {
+        this.nextButtonText = 'Finish'
+      } else { this.nextButtonText = 'Next' }
+    },
     // This function keeps track of the score after the user submits an answer. It also shows the 'next button' to select a new card.
     trackScore: function (isCorrect, userChoice) {
       this.imageData[this.currentCard - 1].identified = isCorrect
@@ -231,6 +257,14 @@ export default {
       this.endRound = true
       // this.nextButtonText = "Play Again"
     },
+    restartGame: function () {
+      this.scoreIsVisible = false
+      this.nextButtonIsVisible = false
+      this.preGame = true
+      this.startRound = false
+      this.currentCard = 0
+      this.showReferenceImageWithID = ''
+    },
     // This function uses the state of the game booleans (preGame, endRound) to run other functions to setup the game, start a round, and get the next card
     actionBasedOnGameState: function () {
       if (this.preGame) {
@@ -243,16 +277,8 @@ export default {
     // This function reloads the page after two minutes of inactivity.
     resetOnInactivity: function () {
       clearTimeout(this.startInactiveResetTimer)
-      this.startInactiveResetTimer = setTimeout( () => window.location.reload(), 120000)
-    },
-    // This function changes the text of the next button to reflect the action that will happen when it is clicked
-    changeNextButtonText: function () {
-      if (this.currentCard === 0) {
-        this.nextButtonText = this.preGame ? 'Start' : 'Play Again'
-        this.nextButtonIsVisible = true
-      } else if (this.currentCard === this.cardsPerRound) {
-        this.nextButtonText = 'Finish'
-      } else { this.nextButtonText = 'Next' }
+      this.startInactiveResetTimer = setTimeout( () =>
+        this.restartGame, 120000)
     },
     // This function creates a listener to zoom in/out on touch using the Zooming package. It returns a zoom object to attach the listener to the to card images and reference images.
     setupZooming: function () {
@@ -306,7 +332,7 @@ export default {
     this.setupZooming()
   },
   mounted () {
-    this.preGame = true;
+    this.preGame = true
     
     // Animations used to show the score panda shake its head 'yes' on a correct choice
     const correctAnimation = anime.timeline({
@@ -585,7 +611,7 @@ export default {
 
   // restart game button animation
   .slide-horizontal {
-    transform: translateX(-100%)
+    transform: translateX(calc(-101% - 2vw));
   }
 
   // start/next button animation

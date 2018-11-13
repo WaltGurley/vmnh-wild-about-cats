@@ -131,7 +131,7 @@ $card-offset-y: -50%;
       }
     }
     .card-subheader {
-      font-size: 2.2em;
+      font-size: 2.4em;
       text-align: center;
       padding-left: 3rem;
       padding-right: 3rem;
@@ -141,14 +141,6 @@ $card-offset-y: -50%;
       &.bottom {
         margin-bottom: 2.4rem;
       }
-    }
-
-    .card-paragraph {
-      font-size: 2.2em;
-      font-weight: 400;
-      text-align: center;
-      padding-left: 3rem;
-      padding-right: 3rem;
     }
 
     .card-button {
