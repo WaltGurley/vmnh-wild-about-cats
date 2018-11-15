@@ -18,6 +18,7 @@
       <StartCard
         v-on:readyStartGame="readyStartGame"
         v-bind:showStartCard="preGame"
+        v-bind:cardsPerRound="cardsPerRound"
       />
       <GameCard 
         v-for="image in imageData"
@@ -65,12 +66,13 @@
         v-show="startRound"
         class="restart-game-button app-hud-button-and-text"
       >
-        <svg viewBox="-15 -15 185 204">
-          <path d="M91 11V4a4 4 0 0 0-7-3L67 19a4 4 0 0 0 0 5l17 18a4 4 0 0 0 7-3v-8a55 55 0 0 1 42 40 55 55 0 0 1-5 41 10 10 0 0 0 18 10A75 75 0 0 0 91 11zM64 163v7a4 4 0 0 0 7 3l18-18a4 4 0 0 0 0-5l-18-18a4 4 0 0 0-7 3v8a55 55 0 0 1-37-81 10 10 0 0 0-17-10 75 75 0 0 0 54 111z"/>
-        </svg>
+        <svg viewBox="0 0 110 113">
+  <path fill="#221d20" d="M106 70a5 5 0 0 0-5 3 47 47 0 1 1-18-55l-9 6a4 4 0 0 0 2 8l26 4a4 4 0 0 0 4-4l4-25a4 4 0 0 0-6-4l-12 9a57 57 0 1 0 18 65 5 5 0 0 0-4-7z"/>
+</svg>
         <h2 class="app-hud-text button-text">Restart Game</h2>
       </div>
       </transition>
+      <div class="zoom-bg"></div>
     </div>
   </div>
 </template>
@@ -167,7 +169,6 @@ export default {
       this.imageData = sampleSize(uniqueAnimalsNotIdentified,
         this.cardsPerRound
       )
-      console.log(numNotIdentified, this.imageData.length, this.cardsPerRound, fullImgData)
 
       const numberOfChoices = 3
       const uniqueNames = this.uniqueAnimalNames
@@ -206,8 +207,8 @@ export default {
     getNextGameCard: function () {
       this.nextButtonIsVisible = false
       this.showReferenceImageWithID = ''
-      this.animations.correct.seek(0);
-      this.animations.incorrect.seek(0);
+      this.animations.correct.restart();
+      this.animations.incorrect.restart();
       this.animations.correct.pause();
       this.animations.incorrect.pause();
       if (this.currentCard === this.cardsPerRound) {
@@ -219,9 +220,12 @@ export default {
     },
     // This function changes the text of the next button to reflect the action that will happen when it is clicked
     changeNextButtonText: function () {
+      console.log(`Button text: ${this.nextButtonText}`)
       if (this.currentCard === 0) {
         this.nextButtonText = this.preGame ? 'Start' : 'Play Again'
-        this.nextButtonIsVisible = true
+        if (this.nextButtonText === 'Play Again') {
+          this.nextButtonIsVisible = true
+        }
       } else if (this.currentCard === this.cardsPerRound) {
         this.nextButtonText = 'Finish'
       } else { this.nextButtonText = 'Next' }
@@ -255,8 +259,8 @@ export default {
     finishRound: function () {
       this.startRound = false
       this.endRound = true
-      // this.nextButtonText = "Play Again"
     },
+    // This function restarts the game to the front of the start card and removes any other objects
     restartGame: function () {
       this.scoreIsVisible = false
       this.nextButtonIsVisible = false
@@ -264,9 +268,15 @@ export default {
       this.startRound = false
       this.currentCard = 0
       this.showReferenceImageWithID = ''
+      this.animations.correct.restart();
+      this.animations.incorrect.restart();
+      this.animations.correct.pause();
+      this.animations.incorrect.pause();
     },
-    // This function uses the state of the game booleans (preGame, endRound) to run other functions to setup the game, start a round, and get the next card
+    // This function is called when a user presses the "start/next/play again" button. It uses the state of the game booleans (preGame, endRound) to run other functions to setup the game, start a round, and get the next card
     actionBasedOnGameState: function () {
+      console.log(`pregame: ${this.preGame}, endround ${this.endRound}`);
+      
       if (this.preGame) {
         this.startRoundSetup()
       } else if (this.endRound) {
@@ -288,6 +298,7 @@ export default {
         scaleBase: 0.9,
         // Add border radius to bottom of card image when zoomed in, lower the z-index of the visible reference image, and set image zoom callout text and icon display to none
         onBeforeOpen: (zoomedImage) => {
+          document.querySelector(".zoom-bg").classList.add("show")
           document.querySelectorAll('.next-card-button').forEach(d =>
             d.setAttribute('disabled', true)
           )
@@ -303,6 +314,8 @@ export default {
             )
           }
         },
+        onBeforeClose: () => 
+          document.querySelector(".zoom-bg").classList.remove("show"),
         // Remove border radius from bottom of card image when zoomed out, raise the z-index of the visible reference image, and make image zoom callout text and icon visible
         onClose: (zoomedImage) => {
           document.querySelectorAll('.next-card-button').forEach(d =>
@@ -332,6 +345,7 @@ export default {
     this.setupZooming()
   },
   mounted () {
+    // Wait to set pregame to true in order to animate start card entrance
     this.preGame = true
     
     // Animations used to show the score panda shake its head 'yes' on a correct choice
@@ -436,6 +450,7 @@ export default {
   color: #333537;
   background-color: #333537;
   overflow: hidden;
+  position: fixed;
 
   .bolded {
     font-weight: 700;
@@ -480,8 +495,8 @@ export default {
     transition: all 0.2s ease-in;
 
     &:hover, &:focus {
-      background-color: #DD5F5B;
-      border-color: #DD5F5B;
+      background-color: #ff3920;
+      border-color: #ff3920;
       outline: none !important;
       box-shadow: none;
     }
@@ -491,6 +506,21 @@ export default {
     width: 100vw;
     height: 100%;
     perspective: 10000px;
+  }
+
+  .zoom-bg {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-color: #333537;
+    transition: opacity 0.4s;
+
+    &.show {
+      opacity: 0.8;
+    }
   }
 
   $card-height: 85vh;
@@ -547,27 +577,6 @@ export default {
       }
     }
   }
-
-  // .info-button {
-  //   position: absolute;
-  //   z-index: -2;
-  //   padding-left: 1.2rem;
-  //   padding-top: 7.5vh;
-
-  //   .info-button-icon {
-  //     font-weight: 700;
-  //     margin-right: 0.6rem;
-  //     text-align: center;
-  //     text-anchor: middle;
-  //     background-color: #333537;
-  //     width: 2.8vw;
-  //     height: 2.8vw;
-  //     border-radius: 50%;
-  //     border-style: solid;
-  //     border-width: 5px;
-  //     border-color: #FFFFFF;
-  //   }
-  // }
 
   .next-card-button {
     position: absolute;

@@ -106,7 +106,7 @@ $card-offset-y: -50%;
     border-radius: 1.6em;
     width: 100%;
     height: 100%;
-    box-shadow: 0px 0px 0px 8px #DD5F5B inset;
+    box-shadow: 0px 0px 0px 8px #ff3920 inset;
     display: flex;
     flex-direction: column;
     align-items: center;

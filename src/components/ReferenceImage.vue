@@ -84,14 +84,10 @@ $card-offset-y: -50%;
       border-bottom-left-radius: 1.1rem;
       border-top-right-radius: 1.1rem;
       border-top-left-radius: 1.1rem;
-
-      border-width: 4px;
-      border-color: #DD5F5B;
     }
 
-    &.top-border-radius {
-      border-top-right-radius: 1.1rem;
-      border-top-left-radius: 1.1rem;
+    &.big-box-shadow {
+      box-shadow: 0 0 50vw #24383A;
     }
   }
 }

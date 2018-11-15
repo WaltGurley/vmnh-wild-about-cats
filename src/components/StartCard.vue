@@ -37,7 +37,7 @@
             Select the correct name of the animal in the photo from the three choices.
           </p>
           <p class="card-paragraph">
-            A panda will keep track of your score.
+            There are {{ cardsPerRound }} photos in a round. A panda will keep track of your score.
           </p>
           <p class="card-paragraph">
             Don't worry if you choose incorrectly: You can try again. The game randomly selects from dozens of images, so you'll get to learn something new each time!
@@ -58,7 +58,7 @@ export default {
   components: {
     PandaIcon
   },
-  props: ['showStartCard'],
+  props: ['showStartCard', 'cardsPerRound'],
   data () {
     return {
       isFlipped: false
@@ -100,7 +100,7 @@ $card-offset-y: -50%;
     border-radius: 1.6em;
     width: 100%;
     height: 100%;
-    box-shadow: 0px 0px 0px 8px #DD5F5B inset;
+    box-shadow: 0px 0px 0px 8px #ff3920 inset;
     display: flex;
     flex-direction: column;
     align-items: center;
