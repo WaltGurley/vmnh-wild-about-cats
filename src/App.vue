@@ -220,7 +220,6 @@ export default {
     },
     // This function changes the text of the next button to reflect the action that will happen when it is clicked
     changeNextButtonText: function () {
-      console.log(`Button text: ${this.nextButtonText}`)
       if (this.currentCard === 0) {
         this.nextButtonText = this.preGame ? 'Start' : 'Play Again'
         if (this.nextButtonText === 'Play Again') {
@@ -275,8 +274,6 @@ export default {
     },
     // This function is called when a user presses the "start/next/play again" button. It uses the state of the game booleans (preGame, endRound) to run other functions to setup the game, start a round, and get the next card
     actionBasedOnGameState: function () {
-      console.log(`pregame: ${this.preGame}, endround ${this.endRound}`);
-      
       if (this.preGame) {
         this.startRoundSetup()
       } else if (this.endRound) {
@@ -444,6 +441,7 @@ export default {
   font-family: 'Gentium Basic', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100%;
   height: 100%;
   background-image: url('./assets/RedTile.png');
   background-position: center;
