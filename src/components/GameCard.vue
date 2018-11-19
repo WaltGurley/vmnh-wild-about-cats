@@ -50,7 +50,7 @@
           <h2 class="card-header">You are correct!</h2>
           <h2 class="card-header">{{ cardData.animalName }}</h2>
           <h2 class="card-subheader sci-name">{{ cardData.scientificName }}</h2>
-          <p class="card-paragraph">{{ cardData.animalDescription }}</p>
+          <p class="card-paragraph" v-html="cardData.animalDescription"></p>
         </div>
         <div v-show="!correct">
           <h2 class="card-header">Sorry, that's incorrect</h2>
