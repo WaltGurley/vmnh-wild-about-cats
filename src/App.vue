@@ -156,13 +156,26 @@ export default {
       }
 
       // Create an array consisting of unique animals that have not yet been identified
-      const uniqueAnimalsNotIdentified = filter(
-        uniqBy(shuffle(fullImgData), 'animalName'),
-        img => !img.identified
-      )
-      // If the number of unique, unidentified animals is less than the number of cards in a round set the number of cards in a round to the number of unique, unidentified animals
+      // const uniqueAnimalsNotIdentified = filter(
+      //   uniqBy(shuffle(fullImgData), 'animalName'),
+      //   img => !img.identified
+      // )
+
+      let uniqueAnimalsNotIdentified = uniqBy(
+        filter(fullImgData, img => !img.identified),
+        'animalName')
+      
+      // If the number of unique, unidentified animals is less than the number of cards in a round pad the round with already identified images
       if (uniqueAnimalsNotIdentified.length < this.cardsPerRound) {
-        this.cardsPerRound = uniqueAnimalsNotIdentified.length;
+        const cardsToFillRound = this.cardsPerRound -
+          uniqueAnimalsNotIdentified.length
+        uniqueAnimalsNotIdentified = uniqueAnimalsNotIdentified.concat(
+          sampleSize(
+            filter(fullImgData, img => img.identified),
+            cardsToFillRound
+          )
+        );
+ 
       }
 
       // Set the image data that will populate the cards in a round
