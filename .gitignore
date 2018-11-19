@@ -3,10 +3,12 @@ node_modules
 /dist
 /dist-ghpages
 /raw-assets
+deploy-ghpages.sh
 
 # local env files
 .env.local
 .env.*.local
+.env.staging
 
 # Log files
 npm-debug.log*
