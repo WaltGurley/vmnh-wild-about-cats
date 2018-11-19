@@ -11,7 +11,7 @@
         data-action="zoom"
       >
       <aside class="image-zoom-callout reference-image-callout">
-        <p class="image-zoom-text">Touch to zoom</p>
+        <p class="image-zoom-text">Touch photo to zoom</p>
         <TouchIcon/>
       </aside>
     </div>
