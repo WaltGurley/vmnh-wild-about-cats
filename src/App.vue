@@ -15,9 +15,14 @@
           </h2>
         </div>
       </transition>
+      <InfoCard
+        v-show="showInfoCard"
+        v-on:removeInfoCard="toggleInfoCard"
+      />
       <StartCard
         v-on:readyStartGame="readyStartGame"
         v-bind:showStartCard="preGame"
+        v-bind:gameIsReseting="gameIsReseting"
         v-bind:cardsPerRound="cardsPerRound"
       />
       <GameCard 
@@ -56,6 +61,16 @@
             </svg>
         </div>
       </transition>
+      <div
+        v-on:click="toggleInfoCard"
+        class="info-button app-hud-button-and-text"
+      >
+        <svg viewBox="-6 -6 168 168">
+          <circle cx="78" cy="78" r="78"/>
+          <path fill="#fff" d="M59 136v-4a45 45 0 0 0 9-2l3-3V78v-7a8 8 0 0 0-1-4 6 6 0 0 0-4-2 42 42 0 0 0-7-1v-4a119 119 0 0 0 22-7h3v74l3 2a36 36 0 0 0 9 3v4zM87 27a13 13 0 0 1-1 5 12 12 0 0 1-2 4 10 10 0 0 1-3 2 8 8 0 0 1-4 1c-3 0-5 0-6-2a10 10 0 0 1-2-6 13 13 0 0 1 1-5 12 12 0 0 1 2-3 11 11 0 0 1 3-3 8 8 0 0 1 4-1q8 0 8 8z"/>
+        </svg>
+        <h2 class="app-hud-text button-text">About</h2>
+      </div>
       <transition
         name="slide"
         enter-class="slide-horizontal"
@@ -67,12 +82,15 @@
         class="restart-game-button app-hud-button-and-text"
       >
         <svg viewBox="0 0 110 113">
-  <path fill="#221d20" d="M106 70a5 5 0 0 0-5 3 47 47 0 1 1-18-55l-9 6a4 4 0 0 0 2 8l26 4a4 4 0 0 0 4-4l4-25a4 4 0 0 0-6-4l-12 9a57 57 0 1 0 18 65 5 5 0 0 0-4-7z"/>
-</svg>
+          <path fill="#221d20" d="M106 70a5 5 0 0 0-5 3 47 47 0 1 1-18-55l-9 6a4 4 0 0 0 2 8l26 4a4 4 0 0 0 4-4l4-25a4 4 0 0 0-6-4l-12 9a57 57 0 1 0 18 65 5 5 0 0 0-4-7z"/>
+        </svg>
         <h2 class="app-hud-text button-text">Restart Game</h2>
       </div>
       </transition>
-      <div class="zoom-bg"></div>
+      <div
+        class="zoom-bg"
+        v-on:click="toggleInfoCard"
+      ></div>
     </div>
   </div>
 </template>
@@ -82,6 +100,7 @@ import GameCard from './components/GameCard.vue'
 import StartCard from './components/StartCard.vue'
 import ReferenceImage from './components/ReferenceImage.vue'
 import EndCard from './components/EndCard.vue'
+import InfoCard from './components/InfoCard.vue'
 import PandaIcon from './assets/panda.svg'
 
 import shuffle from 'lodash/shuffle'
@@ -103,6 +122,7 @@ export default {
     StartCard,
     ReferenceImage,
     EndCard,
+    InfoCard,
     PandaIcon
   },
   data () {
@@ -117,8 +137,10 @@ export default {
       endRound: false,
       currentCard: 0,
       showReferenceImageWithID: '',
+      showInfoCard: false,
       scoreIsVisible: false,
       nextButtonIsVisible: false,
+      gameIsReseting: false,
       nextButtonText: 'Start',
       animations: {},
       zooming: {}
@@ -174,7 +196,7 @@ export default {
             filter(fullImgData, img => img.identified),
             cardsToFillRound
           )
-        );
+        )
  
       }
 
@@ -208,6 +230,7 @@ export default {
       this.score = 0
       this.scoreIsVisible = true
       this.nextButtonIsVisible = true
+      this.gameIsReseting = false
       this.setDataForRound()
     },
     // This function removes the preGame StartCard and calls the first GameCard to start the round.
@@ -220,10 +243,10 @@ export default {
     getNextGameCard: function () {
       this.nextButtonIsVisible = false
       this.showReferenceImageWithID = ''
-      this.animations.correct.restart();
-      this.animations.incorrect.restart();
-      this.animations.correct.pause();
-      this.animations.incorrect.pause();
+      this.animations.correct.restart()
+      this.animations.incorrect.restart()
+      this.animations.correct.pause()
+      this.animations.incorrect.pause()
       if (this.currentCard === this.cardsPerRound) {
         this.finishRound()
         this.currentCard = 0
@@ -278,12 +301,17 @@ export default {
       this.nextButtonIsVisible = false
       this.preGame = true
       this.startRound = false
+      this.endRound = false
       this.currentCard = 0
       this.showReferenceImageWithID = ''
-      this.animations.correct.restart();
-      this.animations.incorrect.restart();
-      this.animations.correct.pause();
-      this.animations.incorrect.pause();
+      this.animations.correct.restart()
+      this.animations.incorrect.restart()
+      this.animations.correct.pause()
+      this.animations.incorrect.pause()
+      this.gameIsReseting = true
+      if (this.showInfoCard) {
+        this.toggleInfoCard()
+      }
     },
     // This function is called when a user presses the "start/next/play again" button. It uses the state of the game booleans (preGame, endRound) to run other functions to setup the game, start a round, and get the next card
     actionBasedOnGameState: function () {
@@ -294,11 +322,17 @@ export default {
         this.startRoundSetup()
       } else { this.getNextGameCard() }
     },
+    // This function toggles showing/hiding the info card
+    toggleInfoCard: function () {
+      this.showInfoCard = !this.showInfoCard
+      document.querySelector('.zoom-bg')
+        .classList.toggle('show-with-info-card')
+    },
     // This function reloads the page after two minutes of inactivity.
     resetOnInactivity: function () {
       clearTimeout(this.startInactiveResetTimer)
       this.startInactiveResetTimer = setTimeout( () =>
-        this.restartGame, 120000)
+        this.restartGame(), 120000)
     },
     // This function creates a listener to zoom in/out on touch using the Zooming package. It returns a zoom object to attach the listener to the to card images and reference images.
     setupZooming: function () {
@@ -481,7 +515,7 @@ export default {
     color: #FFFFFF;
     margin-top: 0;
     margin-bottom: 0;
-    filter: drop-shadow(3px 6px 2px #24383A);
+    filter: drop-shadow(3px 3px 2px #24383A);
   }
 
   .app-hud-button-and-text {
@@ -531,6 +565,13 @@ export default {
 
     &.show {
       opacity: 0.8;
+      pointer-events: auto;
+    }
+
+    &.show-with-info-card {
+      opacity: 0.8;
+      pointer-events: auto;
+      z-index: 100;
     }
   }
 
@@ -552,7 +593,7 @@ export default {
     .panda-icon {
       width: 100%;
       height: 100%;
-      filter: drop-shadow(5px 10px 8px #24383A);
+      filter: drop-shadow(3px 6px 7px #24383A);
     
       .head, [data-name="ears"] {
         transform-origin:40%;
@@ -564,7 +605,7 @@ export default {
     }
   }
 
-  .restart-game-button {
+  .info-button {
     position: absolute;
     z-index: -1;
     left: 2%;
@@ -575,13 +616,34 @@ export default {
     }
 
     svg {
-      // background-color: #333537;
-      // border-radius: 1.2rem;
-      // border-style: solid;
-      // border-width: 5px;
-      // border-color: #FFFFFF;
       height: 80%;
-      filter: drop-shadow(3px 6px 2px #24383A);
+      filter: drop-shadow(3px 6px 7px #24383A);
+
+      circle {
+        fill: #333537;
+        stroke: #ffffff;
+        stroke-width: 12px;
+      }
+
+      path {
+        fill: #ffffff;
+      }
+    }
+  }
+
+  .restart-game-button {
+    position: absolute;
+    z-index: -1;
+    left: 2%;
+    top: 18.75vh;
+
+    .button-text {
+      margin-left: 0.6rem;
+    }
+
+    svg {
+      height: 80%;
+      filter: drop-shadow(2px 5px 3px #24383A);
 
       path {
         fill: #ffffff;
@@ -603,7 +665,7 @@ export default {
     svg {
       height: 90%;
       width: auto;
-      filter: drop-shadow(5px 10px 6px #24383A);
+      filter: drop-shadow(3px 6px 7px #24383A);
 
       path {
         stroke: #FFFFFF;

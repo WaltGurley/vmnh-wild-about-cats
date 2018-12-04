@@ -49,7 +49,6 @@ $card-offset-y: -50%;
   position: absolute;
   top: (100vh - $card-height) / 2;
   right: 2%;
-  // transform: translateY(0);
 
   .image-zoom-callout {
     position: absolute;
@@ -59,7 +58,6 @@ $card-offset-y: -50%;
     height: $card-height * 0.06;
     top: 0.5%;
     right: 2.5%;
-    // transform: translateX(50%);
     color: #FFFFFF;
 
     svg {
@@ -84,10 +82,6 @@ $card-offset-y: -50%;
       border-bottom-left-radius: 1.1rem;
       border-top-right-radius: 1.1rem;
       border-top-left-radius: 1.1rem;
-    }
-
-    &.big-box-shadow {
-      box-shadow: 0 0 50vw #24383A;
     }
   }
 }

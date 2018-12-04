@@ -10,7 +10,7 @@ This repository contains the development files for the application Under the Umb
 
 Under the umbrella is a game for exploring camera trap photographs of animals from the mountains of China, including the giant panda. Users are tested on their ability to correctly identify animals pictured in five camera trap photos. Three animal names are provided and the user must select the one corresponding to the animal in the photo.
 
-This application is built with Vue.js.
+This application is built with Vue 2.5.17 using @vue/cli 3.1.3
 
 ### Data and data sources
 

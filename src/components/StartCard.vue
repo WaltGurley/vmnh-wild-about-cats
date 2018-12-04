@@ -58,7 +58,7 @@ export default {
   components: {
     PandaIcon
   },
-  props: ['showStartCard', 'cardsPerRound'],
+  props: ['showStartCard', 'cardsPerRound', 'gameIsReseting'],
   data () {
     return {
       isFlipped: false
@@ -72,6 +72,14 @@ export default {
     onCardLeave: function () {
       // Must remove the flipped transform for leave transition to work
       this.isFlipped = false
+    }
+  },
+  watch: {
+    // Flip the start card to front if flipped and change occurs during reset
+    gameIsReseting: function (isResetting) {
+      if (this.isFlipped && isResetting) {
+        this.isFlipped = false;
+      }
     }
   }
 }
@@ -176,7 +184,7 @@ $card-offset-y: -50%;
 }
 
 // card slide animation
-.slide-bottom-left-active, .slide-bottom-left-active {
+.slide-bottom-left-active {
   transition-delay: 0.6s;
   transition-duration: 1.2s;
 }
@@ -190,18 +198,6 @@ $card-offset-y: -50%;
 .slide-bottom-left-leave-to {
   transform: rotateX(180deg) rotateZ(-90deg) translateX(calc(7.5vh + 40px)) translateY($card-offset-y);
 }
-
-
-// .slidable {
-//   transition-property: transform;
-//   transition-duration: 1.6s;
-//   transition-timing-function: cubic-bezier(0.25, -0.5, 0.25, 1.25);
-
-//   &.slide-in-out-from-bottom-left {
-//     transform-origin: left;
-//     transform: rotateX(180deg) rotateZ(-90deg) translateX(calc(7.5vh + 40px)) translateY($card-offset-y);
-//   }
-// }
 
 .flippable {
   transition-property: transform, box-shadow;

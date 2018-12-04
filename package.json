@@ -13,12 +13,12 @@
     "zooming": "^2.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0",
-    "@vue/cli-plugin-eslint": "^3.0.0",
-    "@vue/cli-service": "^3.0.0",
+    "@vue/cli-plugin-babel": "^3.2.0",
+    "@vue/cli-plugin-eslint": "^3.2.1",
+    "@vue/cli-service": "^3.2.0",
     "csv-loader": "^3.0.2",
-    "node-sass": "^4.9.3",
-    "papaparse": "^4.6.0",
+    "node-sass": "^4.10.0",
+    "papaparse": "^4.6.2",
     "sass-loader": "^7.1.0",
     "vue-svg-loader": "^0.8.0",
     "vue-template-compiler": "^2.5.17"
