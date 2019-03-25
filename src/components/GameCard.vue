@@ -217,7 +217,6 @@ $card-offset-y: -50%;
     }
 
     .card-choices {
-      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -225,7 +224,7 @@ $card-offset-y: -50%;
       .card-buttons {
         display: flex;
         flex-direction: column;
-        margin-bottom: 2.2rem;
+        margin: 2.1rem 0;
 
         .card-button {
           margin-bottom: 1.9rem;
