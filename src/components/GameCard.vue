@@ -55,7 +55,7 @@
         <div v-show="!correct">
           <h2 class="card-header">Sorry, that's incorrect</h2>
           <p class="card-paragraph big-font">The animal in this camera trap picture is {{ vowelOrConsonant(cardData.animalName) }} <span class="bolded">{{ cardData.animalName }}</span>.</p>
-          <p class="card-paragraph big-font">For reference, the animal in the camera trap picture to the right is {{ vowelOrConsonant(userChoice) }}  <span class="bolded">{{ userChoice }}</span>.</p>
+          <p class="card-paragraph big-font">The picture to the right provides a clearer image of what {{ vowelOrConsonant(cardData.animalName) }}  <span class="bolded">{{ cardData.animalName }}</span> looks like.</p>
           <p class="card-paragraph big-font">We'll put this card back in the deck for another round.</p>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default {
         this.userChoice = choice
         this.leftOrRightSlide = 'slide-right'
       }
-      this.$emit('score', this.correct, choice)
+      this.$emit('score', this.correct, this.cardData.animalName)
       this.isFlipped = true
     },
     onCardLeave: function () {

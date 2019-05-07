@@ -1,6 +1,5 @@
 <template>
   <div id="app" v-on:click="resetOnInactivity">
-    <!-- <PandaIcon class="test-icon panda-icon" style="width:16%"/> -->
     <div class="card-container">
       <transition
         name="slide"
@@ -9,7 +8,8 @@
           class="score-icon-holder"
           v-show="scoreIsVisible"
         >
-          <PandaIcon class="panda-icon"/>
+          <!-- <PandaIcon class="panda-icon"/> -->
+          <img src="./assets/WildAboutCats2019Logo_trim.png" alt="Wild About Cats Logo" class="wild-about-cats-logo">
           <h2 class="app-hud-text">Score:
             <span class="score bolded">{{ score }}</span>
           </h2>
@@ -110,6 +110,7 @@ import uniqBy from 'lodash/uniqBy'
 
 // Load in the image data from the csv file
 import fullImgData from './assets/imageData.csv'
+import referenceImgData from './assets/referenceImageData.csv'
 
 // import Zooming for image zoom and anime for animations
 import Zooming from 'zooming'
@@ -142,7 +143,6 @@ export default {
       nextButtonIsVisible: false,
       gameIsReseting: false,
       nextButtonText: 'Start',
-      animations: {},
       zooming: {}
     }
   },
@@ -153,18 +153,27 @@ export default {
       
       fullImgData.forEach(function (row) {
         row.identified = false
-        row.src = require(`./assets/images/${row.imageName}`)
+        row.src = require(`./assets/images/${row.imageName.trim()}`)
+        row.animalName = row.animalName.trim()
+        row.scientificName = row.scientificName.trim()
+        row.animalDescription = row.animalDescription.trim()
+        row.project = row.project.trim()
         animalNames.push(row.animalName)
       })
-
-      this.referenceCardData = uniqBy(fullImgData, 'animalName')
-        .map(function (row) {
-          const srcAndName = {
-            src: row.src,
-            animalName: row.animalName
-          }
-          return srcAndName
-        })
+  
+      referenceImgData.forEach(function(row) {
+        row.src = require(`./assets/images/reference/${row.imageName.trim()}`)
+      })
+      this.referenceCardData = referenceImgData
+      console.log(referenceImgData)
+      // uniqBy(fullImgData, 'animalName')
+      //   .map(function (row) {
+      //     const srcAndName = {
+      //       src: row.src,
+      //       animalName: row.animalName
+      //     }
+      //     return srcAndName
+      //   })
       this.uniqueAnimalNames = this.referenceCardData.map(row => row.animalName)
     },
     // This function sets the data for the 'cardsPerRound' to be used in one round of play. The full image data is shuffled, then filtered by unique name to prevent duplication of an animal type in one round, and then filtered to ensure an already identified image is not shown
@@ -243,10 +252,6 @@ export default {
     getNextGameCard: function () {
       this.nextButtonIsVisible = false
       this.showReferenceImageWithID = ''
-      this.animations.correct.restart()
-      this.animations.incorrect.restart()
-      this.animations.correct.pause()
-      this.animations.incorrect.pause()
       if (this.currentCard === this.cardsPerRound) {
         this.finishRound()
         this.currentCard = 0
@@ -266,20 +271,15 @@ export default {
       } else { this.nextButtonText = 'Next' }
     },
     // This function keeps track of the score after the user submits an answer. It also shows the 'next button' to select a new card.
-    trackScore: function (isCorrect, userChoice) {
+    trackScore: function (isCorrect, correctAnimalName) {
       this.imageData[this.currentCard - 1].identified = isCorrect
       this.score = this.imageData.filter(d => d.identified).length
       this.nextButtonIsVisible = true
 
       // If the user's choice is incorrect show the reference image
       if (!isCorrect) {
-        this.showReferenceImageWithID = userChoice
-        // Start the panda animation for incorrect choices
-        this.animations.incorrect.play()
+        this.showReferenceImageWithID = correctAnimalName
       } else if (isCorrect) {
-        // Start the panda animation for correct choice
-        this.animations.correct.play()
-
         // Animate score number on change
         anime({
           targets: '.score',
@@ -304,10 +304,6 @@ export default {
       this.endRound = false
       this.currentCard = 0
       this.showReferenceImageWithID = ''
-      this.animations.correct.restart()
-      this.animations.incorrect.restart()
-      this.animations.correct.pause()
-      this.animations.incorrect.pause()
       this.gameIsReseting = true
       if (this.showInfoCard) {
         this.toggleInfoCard()
@@ -391,93 +387,6 @@ export default {
   mounted () {
     // Wait to set pregame to true in order to animate start card entrance
     this.preGame = true
-    
-    // Animations used to show the score panda shake its head 'yes' on a correct choice
-    const correctAnimation = anime.timeline({
-      direction: 'alternate',
-      loop: true,
-      autoplay: false
-    })
-
-    correctAnimation
-      .add({
-        targets: '.score-icon-holder .head',
-        translateY: -5,
-        rotateX: '25deg',
-        offset: 0,
-        duration: 400,
-        easing: 'easeInOutSine'
-      })
-      .add({
-        targets: ['.score-icon-holder [data-name="mouth"]', '.score-icon-holder [data-name="upper-mouth"]', '.score-icon-holder [data-name="nose"]', '.score-icon-holder [data-name="face-shadow"]'],
-        translateY: -9,
-        offset: 0,
-        duration: 400,
-        easing: 'easeInOutSine'
-      })
-     .add({
-        targets: '.score-icon-holder [data-name="head-shadow"]',
-        translateX: -20,
-        offset: 0,
-        duration: 400,
-        easing: 'easeInOutSine'
-      })
-
-    // Animations used to show the score panda shake its head 'no' on an incorrect choice
-    const incorrectAnimation = anime.timeline({
-      direction: 'normal',
-      loop: true,
-      autoplay: false
-    })
-
-    incorrectAnimation
-      .add({
-        targets: '.score-icon-holder .head',
-        rotateY: [
-          { value: '-20deg', duration: 200, easing: 'easeInOutSine' },
-          { value: '20deg', duration: 400, easing: 'easeInOutSine' },
-          { value: '-20deg', duration: 400, easing: 'easeInOutSine' },
-          { value: 0, duration: 400, easing: [0.175, 0.885, 1.000, 1.650] }
-        ],
-        offset: 400,
-      })
-      .add({
-        targets: '.score-icon-holder [data-name="ears"]',
-        rotateY: [
-          { value: '-25deg', duration: 200, easing: 'easeInOutSine' },
-          { value: '25deg', duration: 400, easing: 'easeInOutSine' },
-          { value: '-25deg', duration: 400, easing: 'easeInOutSine' },
-          { value: 0, duration: 400, easing: [0.175, 0.885, 1.000, 1.650] }
-        ],
-        offset: 400,
-      })
-      .add({
-        targets: ['.score-icon-holder [data-name="mouth"]', '.score-icon-holder [data-name="upper-mouth"]', '.score-icon-holder [data-name="nose"]', '.score-icon-holder [data-name="face-shadow"]'],
-        translateX: [
-          { value: -6, duration: 200, easing: 'easeInOutSine' },
-          { value: 6, duration: 400, easing: 'easeInOutSine' },
-          { value: -6, duration: 400, easing: 'easeInOutSine' },
-          { value: 0, duration: 400, easing: [0.175, 0.885, 1.000, 1.650] }
-        ],
-        offset: 400,
-      })
-      .add({
-        targets: ['.score-icon-holder [data-name="head-shadow"]'],
-        translateX:[
-          { value: -20, duration: 200, easing: 'easeInOutSine' },
-          { value: 0, duration: 200, easing: 'linear' },
-          { value: -10, duration: 200, easing: 'easeInOutSine' },
-          { value: 0, duration: 200, easing: 'linear' },
-          { value: -20, duration: 200, easing: 'easeInOutSine' },
-          { value: 0, duration: 400, easing: [0.175, 0.885, 1.000, 1.650] }
-        ],
-        offset: 400
-      })
-
-    this.animations = {
-      'correct': correctAnimation,
-      'incorrect': incorrectAnimation
-    }
   }
 }
 </script>
@@ -490,7 +399,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
   height: 100%;
-  background-image: url('./assets/RedTile.png');
+  background-image: url('./assets/background.jpg');
   background-position: center;
   color: #333537;
   background-color: #333537;
@@ -512,10 +421,10 @@ export default {
   .app-hud-text {
     font-size: 3.2rem;
     font-weight: 400;
-    color: #FFFFFF;
+    color: #3a2c24;
     margin-top: 0;
     margin-bottom: 0;
-    filter: drop-shadow(3px 3px 2px #24383A);
+    filter: drop-shadow(3px 3px 2px #9c6e4c);
   }
 
   .app-hud-button-and-text {
@@ -600,6 +509,11 @@ export default {
       }
     }
 
+    .wild-about-cats-logo {
+      width: 250px;
+      margin-bottom: 0;
+    }
+
     .score {
       display: inline-block;
     }
@@ -620,13 +534,13 @@ export default {
       filter: drop-shadow(3px 6px 7px #24383A);
 
       circle {
-        fill: #333537;
-        stroke: #ffffff;
+        fill: #f7d98f;
+        stroke: #3a2c24;
         stroke-width: 12px;
       }
 
       path {
-        fill: #ffffff;
+        fill: #3a2c24;
       }
     }
   }
@@ -646,7 +560,7 @@ export default {
       filter: drop-shadow(2px 5px 3px #24383A);
 
       path {
-        fill: #ffffff;
+        fill: #3a2c24;
       }
     }
   }
