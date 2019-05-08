@@ -8,16 +8,13 @@
       v-bind:class="{ flipped: isFlipped }"
     >
       <div class="card-side front">
-        <div class="panda-icon-holder">
-          <PandaIcon class="panda-icon"/>
-        </div>
+        <img src="../assets/WildAboutCats2019Logo_trim.png" alt="Wild About Cats Logo" class="wild-about-cats-logo">
         <div class="text-group">
-          <h1 class="card-header">Under the Umbrella</h1>
-          <p class="card-paragraph">
-            How well do you know the animals in the mountains of China?
+          <p class="card-paragraph bolded">
+            How well do you know cats?
           </p>
           <p class="card-paragraph">
-            Test your ability to identify some of the animals that share a habitat with the giant panda.
+            Test your ability to identify a variety of wild, and not so wild, cats from around the world.
           </p>
         </div>
         <button
@@ -31,16 +28,16 @@
         <div class="text-group">
           <h1 class="card-header">How to play</h1>
           <p class="card-paragraph">
-            Each card shows a photo taken with a camera trap in China.
+            Each card shows a picture of a cat in the wild taken with a camera trap.
           </p>
           <p class="card-paragraph">
-            Select the correct name of the animal in the photo from the three choices.
+            Select the correct name of the animal in the picture from the three choices.
           </p>
           <p class="card-paragraph">
-            There are {{ cardsPerRound }} photos in a round. A panda will keep track of your score.
+            There are five pictures in a round.
           </p>
           <p class="card-paragraph">
-            Don't worry if you choose incorrectly: You can try again. The game randomly selects from dozens of images, so you'll get to learn something new each time!
+            Don't worry if you choose incorrectly: You can try again. The game randomly selects from dozens of pictures, so you'll get to learn something new each time!
           </p>
         </div>
         <h2 class="card-subheader bolded">
@@ -52,12 +49,8 @@
 </template>
 
 <script>
-import PandaIcon from '../assets/panda.svg'
 export default {
   name: 'StartCard',
-  components: {
-    PandaIcon
-  },
   props: ['showStartCard', 'cardsPerRound', 'gameIsReseting'],
   data () {
     return {
@@ -130,15 +123,9 @@ $card-offset-y: -50%;
       margin-bottom: 2.4rem;
     }
 
-    .panda-icon-holder {
-      margin-top: 2.4rem;
-      display: flex;
-      justify-content: center;
-      
-      .panda-icon {
-        width: 100%;
-        height: 100%;
-      }
+    .wild-about-cats-logo {
+      margin-top: 3rem;
+      width: 375px;
     }
 
     .card-paragraph {
@@ -211,102 +198,5 @@ $card-offset-y: -50%;
   transform: translateX(calc(#{$card-offset-x} + 100%)) translateY($card-offset-y) rotateY(180deg);
   transform-origin: left;
   box-shadow: -10px 20px 40px #24383A;
-}
-</style>
-
-<style lang="scss">
-.panda-icon-holder {
-  @keyframes rollhead {
-    0% {
-      transform: rotateZ(0);
-    }
-    25% {
-      transform: rotateZ(-1deg);
-    }
-    75% {
-      transform: rotateZ(3deg);
-    }
-    100% {
-      transform: rotateZ(0);
-    }
-  }
-
-  @keyframes moveshadow {
-    0% {
-      transform: translateX(0);
-    }
-    25% {
-      transform: translateX(2px);
-    }
-    75% {
-      transform: translateX(-9px);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes blinkeyes {
-    0% {
-      transform: scaleY(1)
-    }
-    3% {
-      transform: scaleY(0)
-    }
-    6% {
-      transform: scaleY(1)
-    }
-  }
-
-  @keyframes flapears {
-    0% {
-      transform: rotateX(0)
-    }
-    85% {
-      transform: rotateX(0)
-    }
-    90% {
-      transform: rotateX(-20deg)
-    }
-    95% {
-      transform: rotateX(0deg)
-    }
-    100% {
-      transform: rotateX(-20deg)
-    }
-  }
-
-  .head {
-    transform-origin: center;
-    animation-duration: 5s;
-    animation-name: rollhead;
-    animation-iteration-count: infinite;
-    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  [data-name="head-shadow"] {
-    transform-origin: center;
-    animation-duration: 5s;
-    animation-name: moveshadow;
-    animation-iteration-count: infinite;
-    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  [data-name="ears"] {
-    transform-origin: center;
-    animation-duration: 6s;
-    animation-name: flapears;
-    animation-direction: alternate;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
-  }
-
-  .eyes {
-    transform-origin: center;
-    animation-duration: 4s;
-    animation-name: blinkeyes;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in;
-  }
 }
 </style>

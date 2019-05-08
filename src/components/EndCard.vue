@@ -3,9 +3,7 @@
     v-bind:class="[slideType]"
   >
     <div class="card-side front">
-        <div class="panda-icon-holder">
-          <PandaIcon class="panda-icon"/>
-        </div>
+      <img src="../assets/WildAboutCats2019Logo_trim.png" alt="Wild About Cats Logo" class="wild-about-cats-logo">
       <div class="text-group">
         <h1 class="card-header">{{ endtext[correctAnswers].greet }}</h1>
         <p class="card-subheader">
@@ -23,13 +21,8 @@
 </template>
 
 <script>
-import PandaIcon from '../assets/panda.svg'
-
 export default {
   name: 'EndCard',
-  components: {
-    PandaIcon
-  },
   props: ['userData', 'totalNumberCards', 'showEndCard'],
   data () {
     return {
@@ -45,19 +38,19 @@ export default {
         },
         {
           greet: 'Good job!',
-          say: 'Some of these animals are tricky to identify'
+          say: 'Some of these cats are tricky to identify'
         },
         {
           greet: 'Not bad!',
-          say: 'These are unusual animals'
+          say: 'These are some unusual cats'
         },
         {
           greet: 'Well done!',
-          say: `You've got an eye for wildlife!`
+          say: `You've got an eye for cats!`
         },
         {
           greet: 'Congratulations!',
-          say: `You're an ecosystem expert!`
+          say: `You're a cat identification expert!`
         }
       ]
     }
@@ -120,16 +113,11 @@ $card-offset-y: -50%;
       margin-top: 0;
     }
 
-    .panda-icon-holder {
-      display: flex;
-      justify-content: center;
-      margin-top: 2.4rem;
-      
-      .panda-icon {
-        width: 100%;
-        height: 100%;
-      }
+    .wild-about-cats-logo {
+      margin-top: 3rem;
+      width: 375px;
     }
+
     .card-subheader {
       font-size: 2.4em;
       text-align: center;

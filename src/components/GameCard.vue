@@ -55,7 +55,7 @@
         <div v-show="!correct">
           <h2 class="card-header">Sorry, that's incorrect</h2>
           <p class="card-paragraph big-font">The animal in this camera trap picture is {{ vowelOrConsonant(cardData.animalName) }} <span class="bolded">{{ cardData.animalName }}</span>.</p>
-          <p class="card-paragraph big-font">The picture to the right provides a clearer image of what {{ vowelOrConsonant(cardData.animalName) }}  <span class="bolded">{{ cardData.animalName }}</span> looks like.</p>
+          <p class="card-paragraph big-font">The picture to the right provides a clearer view of what {{ vowelOrConsonant(cardData.animalName) }}  <span class="bolded">{{ cardData.animalName }}</span> looks like.</p>
           <p class="card-paragraph big-font">We'll put this card back in the deck for another round.</p>
         </div>
       </div>
@@ -239,6 +239,7 @@ $card-offset-y: -50%;
 
   .front {
     background-color: #FFFFFF;
+    justify-content: space-between;
   }
 
   .back {

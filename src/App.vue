@@ -165,15 +165,6 @@ export default {
         row.src = require(`./assets/images/reference/${row.imageName.trim()}`)
       })
       this.referenceCardData = referenceImgData
-      console.log(referenceImgData)
-      // uniqBy(fullImgData, 'animalName')
-      //   .map(function (row) {
-      //     const srcAndName = {
-      //       src: row.src,
-      //       animalName: row.animalName
-      //     }
-      //     return srcAndName
-      //   })
       this.uniqueAnimalNames = this.referenceCardData.map(row => row.animalName)
     },
     // This function sets the data for the 'cardsPerRound' to be used in one round of play. The full image data is shuffled, then filtered by unique name to prevent duplication of an animal type in one round, and then filtered to ensure an already identified image is not shown
@@ -187,11 +178,6 @@ export default {
       }
 
       // Create an array consisting of unique animals that have not yet been identified
-      // const uniqueAnimalsNotIdentified = filter(
-      //   uniqBy(shuffle(fullImgData), 'animalName'),
-      //   img => !img.identified
-      // )
-
       let uniqueAnimalsNotIdentified = uniqBy(
         filter(fullImgData, img => !img.identified),
         'animalName')
@@ -424,7 +410,7 @@ export default {
     color: #3a2c24;
     margin-top: 0;
     margin-bottom: 0;
-    filter: drop-shadow(3px 3px 2px #9c6e4c);
+    filter: drop-shadow(2px 1px 2px #9c6e4c);
   }
 
   .app-hud-button-and-text {
@@ -499,19 +485,9 @@ export default {
     align-items: center;
     flex-direction: column;
 
-    .panda-icon {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(3px 6px 7px #24383A);
-    
-      .head, [data-name="ears"] {
-        transform-origin:40%;
-      }
-    }
-
     .wild-about-cats-logo {
       width: 250px;
-      margin-bottom: 0;
+      margin-bottom: 25px;
     }
 
     .score {

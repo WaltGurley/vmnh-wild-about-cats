@@ -72,8 +72,10 @@ $card-offset-y: -50%;
   }
 
   .reference-image {
-    width: 100%;
+    max-width: 100%;
+    max-height: 60vh;
     position: relative;
+    float: right;
     top: 0;
     box-shadow: 6px 16px 40px #24383A;
 

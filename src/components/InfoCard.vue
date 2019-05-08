@@ -4,9 +4,9 @@
   >
   <div class="card">
     <div class="card-side">
-        <h1 class="card-header">About Under the Umbrella</h1>
-        <p class="card-paragraph">Under the Umbrella was developed at the NCSU Libraries. Photographs are supplied from camera traps operated by eMammal (emammal.si.edu) and depict animals that live in the same habitat and range as the giant panda.</p>
-        <p class="card-paragraph">For information on the Smithsonian Institution’s Privacy Statement and Terms of Use, please visit www.si.edu/privacy and www.si.edu/termsofuse.</p>
+        <h1 class="card-header">Wild About Cats</h1>
+        <p class="card-paragraph">These pictures are sourced from eMammal (emammal.si.edu), a data management system and archive for camera trap research projects, and are provided under an Attribution-NonCommercial-ShareAlike 4.0 International Creative Commons license.</p>
+        <p class="card-paragraph">For more information about eMammal and the camera trap projects identified in this application, please visit emammal.si.edu/about and emammal.si.edu/projects.</p>
         <button
           v-on:click="$emit('removeInfoCard')"
           class="card-button"
@@ -91,4 +91,3 @@ $card-offset-y: -50%;
     transform: translateY(calc(-100vh - #{$card-width})) translateX(-$card-width)  rotateZ(90deg);
 }
 </style>
-translateX(-100%) translateY(-100vh) rotateZ(90deg);
