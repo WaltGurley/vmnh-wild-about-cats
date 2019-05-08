@@ -29,6 +29,8 @@ $card-height: 85vh;
 $card-width: 5 / 8 * $card-height;
 $card-offset-x: -50%;
 $card-offset-y: -50%;
+$dark-brown: #3a2c24;
+$light-brown: #f7d98f;
 .card {
   width: $card-width;
   height: $card-height;
@@ -42,14 +44,14 @@ $card-offset-y: -50%;
   border-width: 8px;
   border-radius: 2em;
   border-color: #FFFFFF;
-  box-shadow: 10px 20px 40px #24383A;
+  box-shadow: 10px 20px 40px $dark-brown;
 
   .card-side {
     border-radius: 1.6em;
     width: 100%;
     height: 100%;
     background-color: #FFFFFF;
-    box-shadow: 0px 0px 0px 8px #ff3920 inset;
+    box-shadow: 0px 0px 0px 8px $light-brown inset;
     display: flex;
     flex-direction: column;
     align-items: center;

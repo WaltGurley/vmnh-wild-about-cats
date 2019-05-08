@@ -43,6 +43,7 @@ $card-height: 85vh;
 $card-width: 5 / 8 * $card-height;
 $card-offset-x: -50%;
 $card-offset-y: -50%;
+$dark-brown: #3a2c24;
 .reference-image-holder {
   width: $card-width;
   height: auto;
@@ -77,7 +78,7 @@ $card-offset-y: -50%;
     position: relative;
     float: right;
     top: 0;
-    box-shadow: 6px 16px 40px #24383A;
+    box-shadow: 6px 16px 40px $dark-brown;
 
     &.full-border-radius {
       border-bottom-right-radius: 1.1rem;

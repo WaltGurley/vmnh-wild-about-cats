@@ -119,6 +119,9 @@ $card-height: 85vh;
 $card-width: 5 / 8 * $card-height;
 $card-offset-x: -50%;
 $card-offset-y: -50%;
+$dark-brown: #3a2c24;
+$medium-brown: #9c6e4c;
+$light-brown: #f7d98f;
 .card {
   width: $card-width;
   height: 8/5 * $card-width;
@@ -132,7 +135,7 @@ $card-offset-y: -50%;
   border-width: 8px;
   border-radius: 2rem;
   border-color: #FFFFFF;
-  box-shadow: 10px 20px 40px #24383A;
+  box-shadow: 10px 20px 40px $dark-brown;
 
   .card-side {
     border-radius: 1.6rem;
@@ -142,7 +145,7 @@ $card-offset-y: -50%;
     flex-direction: column;
     align-items: center;
     backface-visibility: hidden;
-    box-shadow: 0px 0px 0px 8px #ff3920 inset;
+    box-shadow: 0px 0px 0px 8px $light-brown inset;
 
     .image-zoom-callout {
       position: absolute;
@@ -152,7 +155,6 @@ $card-offset-y: -50%;
       height: 6%;
       top: 0.5%;
       right: 2.5%;
-      // transform: translateX(50%);
       color: #FFFFFF;
 
       svg {
@@ -283,6 +285,6 @@ $card-offset-y: -50%;
 .flipped {
   transform: translateX(calc(#{$card-offset-x} + 100%)) translateY($card-offset-y) rotateY(180deg);
   transform-origin: left;
-  box-shadow: -10px 20px 40px #24383A;
+  box-shadow: -10px 20px 40px $dark-brown;
 }
 </style>

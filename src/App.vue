@@ -9,7 +9,7 @@
           v-show="scoreIsVisible"
         >
           <!-- <PandaIcon class="panda-icon"/> -->
-          <img src="./assets/WildAboutCats2019Logo_trim.png" alt="Wild About Cats Logo" class="wild-about-cats-logo">
+          <img src="./assets/WildAboutCats2019Logo_small.png" alt="Wild About Cats Logo" class="wild-about-cats-logo">
           <h2 class="app-hud-text">Score:
             <span class="score bolded">{{ score }}</span>
           </h2>
@@ -101,7 +101,6 @@ import StartCard from './components/StartCard.vue'
 import ReferenceImage from './components/ReferenceImage.vue'
 import EndCard from './components/EndCard.vue'
 import InfoCard from './components/InfoCard.vue'
-import PandaIcon from './assets/panda.svg'
 
 import shuffle from 'lodash/shuffle'
 import sampleSize from 'lodash/sampleSize'
@@ -123,8 +122,7 @@ export default {
     StartCard,
     ReferenceImage,
     EndCard,
-    InfoCard,
-    PandaIcon
+    InfoCard
   },
   data () {
     return {
@@ -379,6 +377,11 @@ export default {
 
 <style lang="scss">
 @import './src/assets/css/fonts.scss';
+
+$dark-brown: #3a2c24;
+$medium-brown: #9c6e4c;
+$light-brown: #f7d98f;
+
 #app {
   font-family: 'Gentium Basic', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -387,8 +390,8 @@ export default {
   height: 100%;
   background-image: url('./assets/background.jpg');
   background-position: center;
-  color: #333537;
-  background-color: #333537;
+  color: $dark-brown;
+  background-color: #f6e4cb;
   overflow: hidden;
   position: fixed;
 
@@ -406,11 +409,10 @@ export default {
 
   .app-hud-text {
     font-size: 3.2rem;
-    font-weight: 400;
-    color: #3a2c24;
+    font-weight: 700;
+    color: $dark-brown;
     margin-top: 0;
     margin-bottom: 0;
-    filter: drop-shadow(2px 1px 2px #9c6e4c);
   }
 
   .app-hud-button-and-text {
@@ -429,14 +431,14 @@ export default {
     font-size: 2.2em;
     font-weight: 400;
     color: #FFFFFF;
-    background-color: #333537;
+    background-color: $dark-brown;
     border-radius: 1.1rem;
-    border-color: #333537;
+    border-color: $dark-brown;
     transition: all 0.2s ease-in;
 
     &:hover, &:focus {
-      background-color: #ff3920;
-      border-color: #ff3920;
+      background-color: $medium-brown;
+      border-color: $medium-brown;
       outline: none !important;
       box-shadow: none;
     }
@@ -492,6 +494,7 @@ export default {
 
     .score {
       display: inline-block;
+      color: $medium-brown;
     }
   }
 
@@ -507,16 +510,16 @@ export default {
 
     svg {
       height: 80%;
-      filter: drop-shadow(3px 6px 7px #24383A);
+      filter: drop-shadow(2px 2px 3px $medium-brown);
 
       circle {
-        fill: #f7d98f;
-        stroke: #3a2c24;
+        fill: $light-brown;
+        stroke: $dark-brown;
         stroke-width: 12px;
       }
 
       path {
-        fill: #3a2c24;
+        fill: $dark-brown;
       }
     }
   }
@@ -532,11 +535,11 @@ export default {
     }
 
     svg {
-      height: 80%;
-      filter: drop-shadow(2px 5px 3px #24383A);
+      height: 78%;
+      filter: drop-shadow(2px 2px 3px $medium-brown);
 
       path {
-        fill: #3a2c24;
+        fill: $dark-brown;
       }
     }
   }
@@ -555,10 +558,11 @@ export default {
     svg {
       height: 90%;
       width: auto;
-      filter: drop-shadow(3px 6px 7px #24383A);
+      filter: drop-shadow(3px 6px 7px $medium-brown);
 
       path {
-        stroke: #FFFFFF;
+        fill: $light-brown;
+        stroke: $dark-brown;
         stroke-width: 12px;
       }
     }
