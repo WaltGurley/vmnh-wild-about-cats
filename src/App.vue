@@ -509,7 +509,7 @@ $light-brown: #f7d98f;
     }
 
     svg {
-      height: 80%;
+      height: 3.8rem;
       filter: drop-shadow(2px 2px 3px $medium-brown);
 
       circle {
@@ -535,7 +535,7 @@ $light-brown: #f7d98f;
     }
 
     svg {
-      height: 78%;
+      height: 3.8rem;
       filter: drop-shadow(2px 2px 3px $medium-brown);
 
       path {

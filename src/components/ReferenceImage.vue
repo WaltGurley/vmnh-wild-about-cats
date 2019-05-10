@@ -62,7 +62,7 @@ $dark-brown: #3a2c24;
     color: #FFFFFF;
 
     svg {
-      height: 75%;
+      height: 2.58rem;
     }
 
     .image-zoom-text {
@@ -95,7 +95,7 @@ $dark-brown: #3a2c24;
 }
 
 .slide-up-enter, .slide-up-leave-to {
-  transform: translateY(calc(-100% - (100vh - #{$card-height}))) rotateZ(90deg);
+  transform: translateY(calc(-100% - (100vh - #{$card-height} + 40px))) rotateZ(90deg);
 }
 
 .slide-up-leave-active, .slide-up-enter-active {

@@ -159,7 +159,7 @@ $light-brown: #f7d98f;
       color: #FFFFFF;
 
       svg {
-        height: 75%;
+        height: 2.58rem;
       }
 
       .image-zoom-text {
