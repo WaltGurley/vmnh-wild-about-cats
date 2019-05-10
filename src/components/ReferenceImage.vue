@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$card-height: 85vh;
+$card-height: 0.85 * 1080px;
 $card-width: 5 / 8 * $card-height;
 $card-offset-x: -50%;
 $card-offset-y: -50%;
@@ -48,7 +48,7 @@ $dark-brown: #3a2c24;
   width: $card-width;
   height: auto;
   position: absolute;
-  top: (100vh - $card-height) / 2;
+  top: (1080px - $card-height) / 2;
   right: 2%;
 
   .image-zoom-callout {
@@ -95,7 +95,7 @@ $dark-brown: #3a2c24;
 }
 
 .slide-up-enter, .slide-up-leave-to {
-  transform: translateY(calc(-100% - (100vh - #{$card-height} + 40px))) rotateZ(90deg);
+  transform: translateY(calc(-100% - (1080px - #{$card-height} + 40px))) rotateZ(90deg);
 }
 
 .slide-up-leave-active, .slide-up-enter-active {

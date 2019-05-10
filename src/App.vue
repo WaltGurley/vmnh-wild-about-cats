@@ -1,5 +1,8 @@
 <template>
-  <div id="app" v-on:click="resetOnInactivity">
+  <div id="app"
+    v-on:click="resetOnInactivity"
+    v-bind:style="{ transform: testScale }"
+  >
     <div class="card-container">
       <transition
         name="slide"
@@ -141,7 +144,8 @@ export default {
       nextButtonIsVisible: false,
       gameIsReseting: false,
       nextButtonText: 'Start',
-      zooming: {}
+      zooming: {},
+      testScale: 1
     }
   },
   methods: {
@@ -360,6 +364,11 @@ export default {
       })
 
       this.zooming = zooming
+    },
+    resizeApp: function() {
+      const minDimension = Math.min(window.innerWidth / 1920,
+        window.innerHeight / 1080)
+        this.testScale = `translate(-50%, -50%) scale(${minDimension})`
     }
   },
   beforeMount () {
@@ -367,10 +376,14 @@ export default {
     this.getImageDataOnLoad()
     // Create the zooming instance with set options for later attachment to GameCard img and ReferenceImage img
     this.setupZooming()
+
+    this.resizeApp()
   },
   mounted () {
     // Wait to set pregame to true in order to animate start card entrance
     this.preGame = true
+
+    window.addEventListener("resize", this.resizeApp)
   }
 }
 </script>
@@ -386,8 +399,12 @@ $light-brown: #f7d98f;
   font-family: 'Gentium Basic', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  width: 100%;
-  height: 100%;
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   background-image: url('./assets/background.jpg');
   background-position: center;
   color: $dark-brown;
@@ -445,15 +462,15 @@ $light-brown: #f7d98f;
   }
 
   .card-container {
-    width: 100vw;
-    height: 100%;
+    width: 1920px;
+    height: 1080px;
     perspective: 10000px;
   }
 
   .zoom-bg {
     position: absolute;
-    width: 100vw;
-    height: 100vh;
+    width: 1920px;
+    height: 1080px;
     opacity: 0;
     pointer-events: none;
     z-index: 1;
@@ -472,13 +489,13 @@ $light-brown: #f7d98f;
     }
   }
 
-  $card-height: 85vh;
+  $card-height: 0.85 * 1080px;
   $card-width: 5 / 8 * $card-height;
-  $center-bw-card-0vw: calc((50vw - #{$card-width} / 2) / 2);
+  $center-bw-card-0vw: (1920px / 2 - $card-width / 2) / 2;
   
   .score-icon-holder {
     position: absolute;
-    top: 75vh;
+    top: 0.75 * 1080px;
     left: $center-bw-card-0vw;
     transform: translateX(-50%) translateY(-50%);
 
@@ -502,7 +519,7 @@ $light-brown: #f7d98f;
     position: absolute;
     z-index: -1;
     left: 2%;
-    top: 7.5vh;
+    top: 7.5%;
 
     .button-text {
       margin-left: 0.6rem;
@@ -528,7 +545,7 @@ $light-brown: #f7d98f;
     position: absolute;
     z-index: -1;
     left: 2%;
-    top: 18.75vh;
+    top: 15%;
 
     .button-text {
       margin-left: 0.6rem;
@@ -547,7 +564,7 @@ $light-brown: #f7d98f;
   .next-card-button {
     position: absolute;
     z-index: -1;
-    top: 75vh;
+    top: 75%;
     right: $center-bw-card-0vw;
     transform: translateX(50%) translateY(-50%);
 

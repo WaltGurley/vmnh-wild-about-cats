@@ -77,7 +77,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$card-height: 85vh;
+$card-height: 0.85 * 1080px;
 $card-width: 5 / 8 * $card-height;
 $card-offset-x: -50%;
 $card-offset-y: -50%;

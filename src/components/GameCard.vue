@@ -116,7 +116,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$card-height: 85vh;
+$card-height: 0.85 * 1080px;
 $card-width: 5 / 8 * $card-height;
 $card-offset-x: -50%;
 $card-offset-y: -50%;
@@ -269,7 +269,7 @@ $light-brown: #f7d98f;
 }
 
 .slide-right-leave-to {
-  transform: translateX(100vw) translateY($card-offset-y) rotateY(180deg);
+  transform: translateX(1080px) translateY($card-offset-y) rotateY(180deg);
 }
 
 .slide-left-enter, .slide-left-leave-to {

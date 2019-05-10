@@ -79,7 +79,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$card-height: 85vh;
+$card-height: 0.85 * 1080px;
 $card-width: 5 / 8 * $card-height;
 $card-offset-x: -50%;
 $card-offset-y: -50%;
@@ -185,12 +185,12 @@ $light-brown: #f7d98f;
 
 // card slide enter animation starting position
 .slide-bottom-left-enter {
-  transform: rotateZ(-90deg) translateX(calc(#{-$card-width} - 7.5vh - 48px)) translateY($card-offset-y);
+  transform: rotateZ(-90deg) translateX(calc(#{-$card-width} - 0.075 * 1080px - 48px)) translateY($card-offset-y);
 }
 
 // card slide exit animation final position
 .slide-bottom-left-leave-to {
-  transform: rotateX(180deg) rotateZ(-90deg) translateX(calc(7.5vh + 40px)) translateY($card-offset-y);
+  transform: rotateX(180deg) rotateZ(-90deg) translateX(calc(0.075 * 1080px + 40px)) translateY($card-offset-y);
 }
 
 .flippable {

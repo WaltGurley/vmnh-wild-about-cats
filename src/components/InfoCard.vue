@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$card-height: 85vh;
+$card-height: 0.85 * 1080px;
 $card-width: 5 / 8 * $card-height;
 $card-offset-x: -50%;
 $card-offset-y: -50%;
@@ -90,6 +90,6 @@ $light-brown: #f7d98f;
 }
 
 .slide-top-center-enter, .slide-top-center-leave-to {
-    transform: translateY(calc(-100vh - #{$card-width})) translateX(-$card-width)  rotateZ(90deg);
+    transform: translateY(calc(-1080px - #{$card-width})) translateX(-$card-width)  rotateZ(90deg);
 }
 </style>
