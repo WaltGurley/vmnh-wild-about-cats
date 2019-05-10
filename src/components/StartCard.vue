@@ -10,11 +10,11 @@
       <div class="card-side front">
         <img src="../assets/WildAboutCats2019Logo_small.png" alt="Wild About Cats Logo" class="wild-about-cats-logo">
         <div class="text-group">
-          <p class="card-paragraph bolded">
-            How well do you know cats?
+          <p class="card-subheader bolded">
+            Do you know your cats?
           </p>
           <p class="card-paragraph">
-            Test your ability to identify a variety of wild, and not so wild, cats from around the world.
+            See if you can identify a variety of cats from around the world in this collection of camera trap pictures from the eMammal research archive.
           </p>
         </div>
         <button
@@ -31,13 +31,13 @@
             Each card shows a picture of a cat in the wild taken with a camera trap.
           </p>
           <p class="card-paragraph">
-            Select the correct name of the animal in the picture from the three choices.
+            Select the correct name of the cat in the picture from the three choices.
           </p>
           <p class="card-paragraph">
-            There are five pictures in a round.
+            There are five pictures in a round. Can you identify all five? Keep track of your score!
           </p>
           <p class="card-paragraph">
-            Don't worry if you choose incorrectly: You can try again. The game randomly selects from dozens of pictures, so you'll get to learn something new each time!
+            It's okay if you choose incorrectly-You can try again in another round. The game randomly selects from dozens of pictures, so you'll get to learn something new each time!
           </p>
         </div>
         <h2 class="card-subheader bolded">
@@ -132,11 +132,11 @@ $light-brown: #f7d98f;
     }
 
     .card-paragraph {
-      font-size: 2.4rem;
+      font-size: 2.0rem;
       font-weight: 400;
       padding-left: 2.8rem;
       padding-right: 2.8rem;
-      margin-top: 1rem;
+      margin-top: 1.8rem;
       margin-bottom: 0;
     }
 
@@ -162,6 +162,10 @@ $light-brown: #f7d98f;
 
     .card-header {
       margin-top: 2.4rem;
+    }
+
+    .card-paragraph {
+      margin-bottom: 2.7rem;
     }
   }
 }

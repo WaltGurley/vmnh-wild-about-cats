@@ -22,7 +22,7 @@
           <TouchIcon/>
         </aside>
         <div class="card-choices">
-          <h2 class="card-header question">Can you identify this animal?</h2>
+          <h2 class="card-header question">Can you identify this cat?</h2>
           <div class="card-buttons">
             <button
               v-for="(name, i) in cardData.choices"
@@ -51,6 +51,7 @@
           <h2 class="card-header">{{ cardData.animalName }}</h2>
           <h2 class="card-subheader sci-name">{{ cardData.scientificName }}</h2>
           <p class="card-paragraph" v-html="cardData.animalDescription"></p>
+          <p class="card-paragraph small-font">Picture source: {{ cardData.project }}</p>
         </div>
         <div v-show="!correct">
           <h2 class="card-header">Sorry, that's incorrect</h2>
@@ -215,6 +216,11 @@ $light-brown: #f7d98f;
 
       &.big-font {
         font-size: 2.0rem;
+      }
+
+      &.small-font {
+        font-size: 1.6rem;
+        color: lighten($dark-brown, 10%)
       }
     }
 

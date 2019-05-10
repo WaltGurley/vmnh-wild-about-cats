@@ -6,8 +6,6 @@ This repository contains the development files for the application Wild About Ca
 
 ### Wild About Cats
 
-*How well do you know the animals in the mountains of China?*
-
 Wild About Cats is a game for exploring camera trap photographs of wild and domestic cats from around the world. Users are tested on their ability to correctly identify animals pictured in five camera trap photos. Three animal names are provided and the user must select the one corresponding to the animal in the photo.
 
 This application is built with Vue 2.6.10 using @vue/cli 3.7.0

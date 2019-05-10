@@ -5,8 +5,8 @@
   <div class="card">
     <div class="card-side">
         <h1 class="card-header">Wild About Cats</h1>
-        <p class="card-paragraph">These pictures are sourced from eMammal (emammal.si.edu), a data management system and archive for camera trap research projects, and are provided under an Attribution-NonCommercial-ShareAlike 4.0 International Creative Commons license.</p>
-        <p class="card-paragraph">For more information about eMammal and the camera trap projects identified in this application, please visit emammal.si.edu/about and emammal.si.edu/projects.</p>
+        <p class="card-paragraph">The pictures in this game are collected from eMammal (emammal.si.edu), a data management system and archive for camera trap research projects, and are provided under an Attribution-NonCommercial-ShareAlike 4.0 International Creative Commons license.</p>
+        <p class="card-paragraph">For more information about eMammal and the camera trap projects identified in this game, please visit emammal.si.edu/about and emammal.si.edu/projects.</p>
         <button
           v-on:click="$emit('removeInfoCard')"
           class="card-button"
@@ -66,7 +66,7 @@ $light-brown: #f7d98f;
     }
 
     .card-paragraph {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 400;
       padding-left: 2.8rem;
       padding-right: 2.8rem;
