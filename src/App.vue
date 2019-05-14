@@ -391,7 +391,7 @@ $light-brown: #f7d98f;
   background-image: url('./assets/background.jpg');
   background-position: center;
   color: $dark-brown;
-  background-color: #f6e4cb;
+  background-color: #f8efe1;
   overflow: hidden;
   position: fixed;
 
